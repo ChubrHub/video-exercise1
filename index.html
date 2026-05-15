@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hemingway &amp; Munger — a game about present vs. future you</title>
+<style>
+  :root {
+    --bg: #0e1014;
+    --panel: #181b23;
+    --panel-2: #21252f;
+    --panel-3: #2a2f3d;
+    --text: #e8ecf3;
+    --muted: #8b93a7;
+    --accent: #6fb3ff;
+    --present: #ff8a5b;
+    --future: #5fd9a7;
+    --compound: #c89cff;
+    --bonus: #ffd166;
+    --border: #2a2f3d;
+    --good: #5fd9a7;
+    --bad: #ff6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: radial-gradient(ellipse at top, #161a24 0%, var(--bg) 70%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { padding: 24px 16px 48px; display: flex; justify-content: center; }
+  #app { width: 100%; max-width: 640px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .title { font-size: 18px; font-weight: 700; letter-spacing: 0.12em; }
+  .title .accent { color: var(--accent); }
+  .turn-indicator { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .turn-indicator.bonus { color: var(--bonus); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* Meters */
+  .meters {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
+  }
+  .meter { margin-bottom: 10px; }
+  .meter:last-of-type { margin-bottom: 12px; }
+  .meter-row {
+    display: flex; justify-content: space-between;
+    font-size: 12px; margin-bottom: 5px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .meter-row .name { color: var(--text); letter-spacing: 0.04em; }
+  .meter-row .val { color: var(--text); font-variant-numeric: tabular-nums; font-weight: 600; }
+  .bar { height: 8px; background: var(--panel-2); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 50%; border-radius: 4px;
+    transition: width 0.6s cubic-bezier(.2,.7,.2,1); }
+  .bar-fill.present { background: linear-gradient(90deg, #ff8a5b, #ffb87a); }
+  .bar-fill.future  { background: linear-gradient(90deg, #5fd9a7, #8af0bf); }
+  .compound-row {
+    border-top: 1px dashed var(--border); padding-top: 10px;
+    display: flex; justify-content: space-between; align-items: center; font-size: 13px;
+  }
+  .compound-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; }
+  .compound-value { color: var(--compound); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 18px; }
+  .streak { font-size: 11px; color: var(--muted); margin-left: 8px;
+    text-transform: uppercase; letter-spacing: 0.08em; }
+  .streak.armed { color: var(--accent); font-weight: 600; }
+
+  /* Card */
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px; position: relative;
+  }
+  .principle {
+    display: inline-block; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--muted); background: var(--panel-2);
+    padding: 5px 10px; border-radius: 999px; margin-bottom: 14px;
+  }
+  .principle.bonus { color: #0e1014; background: var(--bonus); font-weight: 700; }
+  .bias-chip {
+    display: inline-block; margin-left: 6px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); background: rgba(111,179,255,0.08);
+    padding: 5px 10px; border-radius: 999px;
+  }
+  .situation { font-size: 17px; line-height: 1.55; margin: 0 0 22px; }
+
+  /* Choices */
+  .choices { display: grid; gap: 10px; }
+  @media (min-width: 520px) { .choices { grid-template-columns: 1fr 1fr; } }
+  .choice-btn {
+    background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 14px; font: inherit; font-size: 15px; line-height: 1.4;
+    text-align: left; cursor: pointer;
+    transition: background 0.15s, transform 0.1s, border-color 0.15s;
+    display: flex; flex-direction: column; gap: 6px;
+    position: relative;
+  }
+  .choice-btn:hover { background: var(--panel-3); border-color: var(--accent); }
+  .choice-btn:active { transform: translateY(1px); }
+  .choice-btn .kbd { font-size: 10px; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase; }
+
+  /* Feedback */
+  .feedback {
+    background: var(--panel-2); border-left: 3px solid var(--accent);
+    padding: 16px; border-radius: 0 8px 8px 0;
+    font-size: 15px; line-height: 1.55;
+  }
+  .feedback.bonus { border-left-color: var(--bonus); }
+  .feedback .choice-made {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .deltas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .delta { padding: 4px 10px; background: rgba(255,255,255,0.04);
+    border-radius: 999px; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .delta.pres { color: var(--present); }
+  .delta.fut  { color: var(--future); }
+  .delta.cmp  { color: var(--compound); }
+  .math-box {
+    margin-top: 12px; padding: 10px 12px;
+    background: rgba(200,156,255,0.06); border-radius: 6px;
+    font-size: 13px; color: #d8dee9; line-height: 1.5;
+    border-left: 2px solid var(--compound);
+  }
+  .math-box .math-tag { color: var(--compound); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; margin-right: 8px; }
+
+  .next-btn {
+    margin-top: 16px; background: var(--accent); color: #0e1014;
+    border: 0; padding: 12px 24px; border-radius: 8px;
+    font: inherit; font-size: 15px; font-weight: 700;
+    cursor: pointer; width: 100%;
+    transition: filter 0.15s, transform 0.1s;
+  }
+  .next-btn:hover { filter: brightness(1.1); }
+  .next-btn:active { transform: translateY(1px); }
+  .secondary-btn {
+    margin-top: 8px; background: transparent; color: var(--accent);
+    border: 1px solid var(--accent); padding: 10px 24px; border-radius: 8px;
+    font: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; width: 100%;
+  }
+  .secondary-btn:hover { background: rgba(111,179,255,0.08); }
+
+  /* Interstitials */
+  .interstitial {
+    background: var(--panel-2); border-left: 3px solid var(--compound);
+    padding: 16px; border-radius: 0 8px 8px 0;
+    font-size: 15px; line-height: 1.55;
+  }
+  .interstitial.wakeup { border-left-color: var(--bad); }
+  .interstitial .tag {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--compound); margin-bottom: 8px; font-weight: 700;
+  }
+  .interstitial.wakeup .tag { color: var(--bad); }
+
+  /* Timer */
+  .timer-wrap { margin-bottom: 14px; }
+  .timer-label {
+    font-size: 11px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 4px;
+  }
+  .timer-bar { height: 4px; background: var(--panel-2); border-radius: 2px; overflow: hidden; }
+  .timer-bar-fill { height: 100%; background: var(--accent); width: 100%;
+    transition: width 0.1s linear, background 0.3s; }
+  .timer-bar-fill.low { background: var(--bad); }
+
+  /* Intro */
+  .intro {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 36px 28px;
+  }
+  .intro-eyebrow {
+    font-size: 12px; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px;
+  }
+  .intro h1 {
+    font-size: 38px; margin: 0 0 12px;
+    letter-spacing: -0.02em; line-height: 1.05;
+  }
+  .intro p { color: var(--muted); font-size: 15px; line-height: 1.6; margin: 0 0 18px; }
+  .intro ul { color: var(--muted); font-size: 14px; line-height: 1.7;
+    padding-left: 18px; margin: 0 0 22px; }
+  .intro ul li::marker { color: var(--accent); }
+  .options-group {
+    background: var(--panel-2); border-radius: 8px; padding: 14px;
+    margin-bottom: 22px;
+  }
+  .options-group h3 {
+    margin: 0 0 10px; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--muted);
+  }
+  .option-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 6px 0; cursor: pointer;
+  }
+  .option-row input[type="checkbox"] {
+    margin-top: 3px; accent-color: var(--accent);
+    width: 16px; height: 16px;
+  }
+  .option-row .opt-text { font-size: 14px; line-height: 1.4; }
+  .option-row .opt-desc { color: var(--muted); font-size: 12px; }
+  .start-btn {
+    background: var(--accent); color: #0e1014;
+    border: 0; padding: 14px 28px; border-radius: 8px;
+    font: inherit; font-size: 16px; font-weight: 700;
+    cursor: pointer;
+  }
+  .start-btn:hover { filter: brightness(1.1); }
+  .footnote { color: var(--muted); font-size: 12px; margin-top: 14px; text-align: center; }
+
+  /* Epilogue */
+  .epilogue h2 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .epilogue .sub {
+    color: var(--muted); font-size: 13px;
+    text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 18px;
+  }
+  .epilogue .body {
+    font-size: 16px; line-height: 1.7;
+    margin-bottom: 22px; color: #d8dee9;
+  }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+  .stat { background: var(--panel-2); padding: 12px 8px; border-radius: 8px; text-align: center; }
+  .stat .lbl { font-size: 10px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.1em; }
+  .stat .v { font-size: 20px; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .stat .v.pres { color: var(--present); }
+  .stat .v.fut  { color: var(--future); }
+  .stat .v.cmp  { color: var(--compound); }
+
+  .chart-wrap {
+    background: var(--panel-2); border-radius: 8px;
+    padding: 14px 14px 8px; margin-bottom: 18px;
+  }
+  .chart-title {
+    font-size: 11px; text-transform: uppercase; color: var(--muted);
+    letter-spacing: 0.12em; margin-bottom: 8px;
+  }
+  .chart-legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .chart-legend .sw {
+    display: inline-block; width: 10px; height: 3px;
+    margin-right: 5px; vertical-align: middle; border-radius: 1px;
+  }
+  .chart-legend .sw.pres { background: var(--present); }
+  .chart-legend .sw.fut  { background: var(--future); }
+  .chart-legend .sw.cmp  { background: var(--compound); }
+
+  /* Badges gallery */
+  .badges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .badge {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 12px 10px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.3s, transform 0.2s;
+    position: relative;
+  }
+  .badge .icon {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+  }
+  .badge .icon svg { width: 100%; height: 100%; }
+  .badge .b-name { font-size: 12.5px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .badge .b-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .badge.earned { border-color: var(--accent); }
+  .badge.earned .icon { color: var(--accent); }
+  .badge.earned.trap-spotter { border-color: var(--bonus); }
+  .badge.earned.trap-spotter .icon { color: var(--bonus); }
+  .badge.earned.trap-caught { border-color: var(--bad); }
+  .badge.earned.trap-caught .icon { color: var(--bad); }
+  .badge:not(.earned) { opacity: 0.35; filter: saturate(0.4); }
+  .badge:not(.earned) .b-name { color: var(--muted); font-weight: 600; }
+
+  /* Inner voices in feedback */
+  .voices {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+  }
+  .voices-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .voice {
+    background: var(--panel-2);
+    border-left: 2px solid var(--border);
+    padding: 10px 12px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .voice:last-child { margin-bottom: 0; }
+  .voice.chosen {
+    border-left-color: var(--accent);
+    background: rgba(111, 179, 255, 0.06);
+  }
+  .v-head {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .v-letter { color: var(--accent); font-weight: 700; }
+  .v-pick {
+    color: var(--good);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+  .v-text { font-style: italic; color: #d8dee9; }
+  .v-text::before { content: '"'; color: var(--accent); font-style: normal; font-weight: 700; margin-right: 2px; }
+  .v-text::after  { content: '"'; color: var(--accent); font-style: normal; font-weight: 700; margin-left: 2px; }
+
+  /* Epilogue P.S. */
+  .epilogue-ps {
+    margin-top: 14px;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    background: rgba(255, 209, 102, 0.05);
+    border-left: 3px solid var(--bonus);
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #d8dee9;
+  }
+  .ps-tag {
+    font-size: 11px;
+    color: var(--bonus);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .copy-toast {
+    display: inline-block; margin-left: 10px; color: var(--good);
+    font-size: 12px; opacity: 0; transition: opacity 0.3s;
+  }
+  .copy-toast.show { opacity: 1; }
+
+  .fade-in { animation: fade 0.4s ease-out; }
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+
+<script>
+"use strict";
+
+// ============================================================================
+// REGULAR SCENARIOS (10 turns)
+// ============================================================================
+// Each has `obvious` (the choice the system-1 brain advocates) and
+// `betterPath` (the actually better long-term choice). Position A/B is
+// randomized per scenario.
+
+const SCENARIOS = [
+  {
+    id: 'compounding', kind: 'regular',
+    principle: 'Compounding', bias: 'Present bias',
+    situation: "A stranger offers you a deal: $10,000 in cash right now, or a magic penny that doubles in value every day for 30 days. Pick one.",
+    obvious: {
+      label: "Take the $10,000 cash",
+      hint: "Real money, in your hand right now. Exponential growth stories sound great in retrospect, but 30 days is a long time for a stranger's deal to hold up.",
+      feedback: "Solid money in your hand. But a penny doubled 30 times grows past $5.3 million — your gut sided with the bird in your hand, and it cost a fortune. Exponential growth doesn't feel real until the back half of the curve.",
+      math: "Linear: $10,000 once. No compounding.",
+      effects: { present: 10, future: -5, compoundFlat: 25 }
+    },
+    betterPath: {
+      label: "Take the magic penny",
+      hint: "If the doubling holds, the math is wild. If it doesn't, you've got nothing.",
+      feedback: "Day 1 it's $0.02. Day 15 it's $328. Day 30 it's $5,368,709.12. Patience and compounding are the same thing wearing different clothes.",
+      math: "$0.01 × 2^29 ≈ $5,368,709.12 by day 30. The first half of the curve looks like nothing.",
+      effects: {
+        present: -5, future: 12, compoundMult: 1.15,
+        payoffs: [
+          { atTurn: 4,  label: "Magic penny update — day 11. Your stash is now $20.48. Compound multiplier kicks in.", effects: { compoundMult: 1.06 } },
+          { atTurn: 7,  label: "Magic penny update — day 21. Your stash is now $10,485.76. The curve is bending.", effects: { compoundMult: 1.10 } },
+          { atTurn: 10, label: "Magic penny update — day 30. Your stash is $5,368,709.12. This is what compounding feels like from the inside.", effects: { compoundMult: 1.20 } }
+        ]
+      }
+    }
+  },
+  {
+    id: 'marshmallow', kind: 'regular',
+    principle: 'Delayed gratification', bias: 'Hyperbolic discounting',
+    situation: "You're a kid in a famous experiment. There's a marshmallow on the table. If you can wait 15 minutes without eating it, you get two.",
+    obvious: {
+      label: "Eat it now",
+      hint: "Eating now locks in the reward. The researcher could fail to come back, and 'two later' assumes future-you will care as much. Neither is guaranteed.",
+      feedback: "Pure dopamine. The studies aren't deterministic, but kids who waited tended to do better on long-horizon tasks later — probably because the strategies for waiting (distraction, reframing) are the same ones you'll use the rest of your life.",
+      math: "Marshmallows now: 1. Effort: 0.",
+      effects: { present: 12, future: -8, compoundFlat: 15 }
+    },
+    betterPath: {
+      label: "Wait 15 minutes",
+      hint: "Two beats one. But fifteen minutes is going to feel like forever.",
+      feedback: "Two marshmallows. More importantly — you proved to yourself you can do it. The skill being trained isn't 'sit still', it's 'reframe the immediate temptation'.",
+      math: "Marshmallows in 15 min: 2. That's a 100% return in a quarter-hour. Annualized: absurd.",
+      effects: { present: -3, future: 10, compoundMult: 1.10 }
+    }
+  },
+  {
+    id: 'coin-flip', kind: 'regular',
+    principle: 'Expected value vs certainty', bias: 'Loss aversion',
+    situation: "Two envelopes on the table. One has a guaranteed $500. The other is a fair coin flip — heads pays $1,200, tails pays nothing.",
+    obvious: {
+      label: "Take the guaranteed $500",
+      hint: "$500 in hand vs. a coin flip that could give you nothing. You only get to make this decision once — variance matters.",
+      feedback: "Safe. But the coin flip has an expected value of $600 (50% × $1,200) — on average B wins by $100. Loss aversion makes the certain option feel roughly twice as attractive as the math says it should.",
+      math: "Certain $500. EV of the flip = $600. You forfeited $100 of expected value to avoid the chance of zero.",
+      effects: { present: 8, future: -3, compoundFlat: 30 }
+    },
+    betterPath: {
+      label: "Flip the coin",
+      hint: "EV is on your side, but you might walk away with nothing — and that'll sting.",
+      feedback: "EV of $600 beats the certain $500. You might walk away with nothing this time — that's the noise around the signal. Take the same +EV bet a thousand times and you're up around $100,000.",
+      math: "EV = 0.5 × $1,200 = $600. Over many such bets, you average $600/bet vs. $500.",
+      effects: { present: -5, future: 9, compoundMult: 1.12 }
+    }
+  },
+  {
+    id: 'scenic-route', kind: 'regular',
+    principle: 'Process vs outcome', bias: 'Outcome bias',
+    situation: "Saturday morning, no plans, headed to the coast. The highway gets you there in 20 minutes — flat, fast, ugly. The back roads through farmland and forest take 45.",
+    obvious: {
+      label: "Highway — faster is better",
+      hint: "You're going to the coast, not the road. Faster = more time at the actual destination doing the thing you wanted.",
+      feedback: "You optimized for the destination. But the destination is one slice of the day; the road IS most of the experience. Optimizing only for arrival time is a thin way to live.",
+      math: "Time at destination: ~25 min more. Memorable moments along the way: 0.",
+      effects: { present: 5, future: -4, compoundFlat: 10 }
+    },
+    betterPath: {
+      label: "Back roads — enjoy the drive",
+      hint: "Slower, but the drive is part of the day. Probably worth it.",
+      feedback: "You stopped at a roadside stand and bought peaches. You'll remember that years from now. You will not remember the 25 minutes you 'saved' on the highway, ever.",
+      math: "+25 min, ~3-5 distinct memorable moments. Memory-per-minute ratio favors variety over speed.",
+      effects: { present: 6, future: 8, compoundMult: 1.08 }
+    }
+  },
+  {
+    id: 'sleep', kind: 'regular',
+    principle: 'Sleep is interest, paid daily', bias: 'Hot/cold empathy gap',
+    situation: "It's 12:47am. The next episode auto-plays in 8 seconds. You have a job interview at 9am.",
+    obvious: {
+      label: "One more episode",
+      hint: "You're 30 seconds from a cliffhanger. You won't fall asleep right away anyway — might as well finish.",
+      feedback: "You go to bed at 1:48 instead of 1:00. Tomorrow you'll have slower reactions, dimmer working memory, and worse emotional regulation — exactly the variables an interviewer is reading.",
+      math: "Sleep debt cost on interview perf: ~10-15% degradation on memory + reaction tasks per hour lost.",
+      effects: { present: 9, future: -10, compoundFlat: 5 }
+    },
+    betterPath: {
+      label: "Close the laptop",
+      hint: "Tomorrow's interview matters. The episode will still be here.",
+      feedback: "Tomorrow-you walks in rested. The interviewer feels it even if they can't name it. Sleep is one of the highest-leverage long-term plays you have, and it's free.",
+      math: "7-9 hr sleep before high-stakes cognitive tasks: ~15-25% perf gain vs. 5-6 hr.",
+      effects: { present: -4, future: 11, compoundMult: 1.10 }
+    }
+  },
+  {
+    id: 'skill', kind: 'regular',
+    principle: 'Skill investment', bias: 'Effort aversion',
+    situation: "You've got a free hour. You could scroll, or you could spend it on that thing you've been meaning to learn for six months.",
+    obvious: {
+      label: "Scroll",
+      hint: "You're tired. Scrolling is rest. You can learn the thing tomorrow.",
+      feedback: "The feed is engineered to be the most rewarding low-effort thing within reach. That's why it wins — not because it's actually fun, but because everything else feels like work by comparison.",
+      math: "1 hour scrolled today: 0 hours of skill gained, and the activation energy for tomorrow goes up.",
+      effects: { present: 7, future: -5, compoundFlat: 5 }
+    },
+    betterPath: {
+      label: "Learn the thing",
+      hint: "An hour invested compounds. But one hour rarely feels like it'll make a real difference.",
+      feedback: "Skills compound. Every hour invested makes the next hour more productive, and one day you wake up with a capability you didn't have a year ago.",
+      math: "1 hr/day × 5 days/wk × 50 wks = 250 hr/yr. Most skills reach intermediate at ~100 hr.",
+      effects: {
+        present: -3, future: 10, compoundMult: 1.12,
+        payoffs: [
+          { atTurn: 9, label: "The skill you started learning earns its first dividend — a small side gig finds you.", effects: { compoundMult: 1.08 } }
+        ]
+      }
+    }
+  },
+  {
+    id: 'save-vs-spend', kind: 'regular',
+    principle: 'Save vs spend', bias: 'Hedonic adaptation',
+    situation: "You have $400 of fun money. The gadget you've been eyeing is exactly $400. Or you could drop it into a retirement account compounding at 7% a year.",
+    obvious: {
+      label: "Buy the gadget",
+      hint: "You've been thinking about this for months. $400 is a small slice of your savings — you've earned it.",
+      feedback: "Hedonic adaptation is brutal — the gadget feels exciting for two weeks, then becomes background. That $400 is gone.",
+      math: "Excitement half-life: ~2-4 weeks. Then it's just stuff.",
+      effects: { present: 10, future: -6, compoundFlat: 15 }
+    },
+    betterPath: {
+      label: "Move it to retirement",
+      hint: "Boring. The gadget would be fun for at least a couple weeks.",
+      feedback: "$400 at 7% for 30 years becomes ~$3,000. Across a working life of weekly such decisions, this one habit is the difference between retiring at 55 and retiring at 75.",
+      math: "$400 × 1.07^30 ≈ $3,046. 7.6× the original.",
+      effects: {
+        present: -4, future: 10, compoundMult: 1.12,
+        payoffs: [
+          { atTurn: 10, label: "Your retirement contributions are quietly compounding in the background.", effects: { compoundMult: 1.08 } }
+        ]
+      }
+    }
+  },
+  {
+    id: 'exercise', kind: 'regular',
+    principle: 'Health debt', bias: 'Present bias',
+    situation: "Your couch knows your shape. The 30-minute run does not look fun. It's cold.",
+    obvious: {
+      label: "Stay on the couch",
+      hint: "One missed run won't matter. It's cold and you've earned a rest day.",
+      feedback: "Skipping one run is meaningless. Skipping the category of decisions that lead to runs is how you end up at 55 not being able to play with your grandkids.",
+      math: "Single skipped run: ~0% measurable health loss. 200 skipped runs: very measurable.",
+      effects: { present: 6, future: -7, compoundFlat: 5 }
+    },
+    betterPath: {
+      label: "Lace up and go",
+      hint: "Cardio compounds. But getting started is the worst part.",
+      feedback: "Half an hour of moderate cardio compounds across decades into a more durable cardiovascular system, better sleep tonight, and — surprisingly often — a better mood within the hour.",
+      math: "Moderate cardio 3×/wk ≈ 30% lower all-cause mortality risk over decades.",
+      effects: { present: 4, future: 10, compoundMult: 1.10 }
+    }
+  },
+  {
+    id: 'relationships', kind: 'regular',
+    principle: 'Relationship capital', bias: 'Salience bias',
+    situation: "Dinner with a close friend tonight. Your boss DMs: 'If you could ship that extra deck by tomorrow, it'd really stand out.'",
+    obvious: {
+      label: "Cancel dinner, ship the deck",
+      hint: "The boss notices the deck. Your friend will understand. Career capital compounds too.",
+      feedback: "Career capital is real. But your boss will forget the deck in a quarter. Your friend will remember being cancelled on — and after the third time, they stop reaching out.",
+      math: "Career capital: largely replaceable. Top 3 friendships: not.",
+      effects: { present: 8, future: -6, compoundFlat: 20 }
+    },
+    betterPath: {
+      label: "Keep the dinner",
+      hint: "Friends matter, but you do this all the time. One more shouldn't hurt.",
+      feedback: "Showing up reliably for the people who matter is the single highest-compounding investment on a 40-year horizon. Promotions come and go; friendships don't.",
+      math: "Loneliness mortality risk: comparable to smoking 15 cigarettes/day. The deck won't help with that.",
+      effects: { present: 5, future: 12, compoundMult: 1.12 }
+    }
+  },
+  {
+    id: 'capstone', kind: 'regular',
+    principle: 'The capstone bet', bias: 'Status quo bias',
+    situationFn: (s) => {
+      const credible = s.patientStreak >= 4 || s.compoundScore >= 250;
+      return credible
+        ? "A startup offers you a senior role. Equity-heavy, salary 30% below your current. The founders have watched your patient track record and trust you — they're offering you a larger equity slice than they would a stranger. Estimated odds of a meaningful outcome: ~60%."
+        : "A startup offers you a senior role. Equity-heavy, salary 30% below your current. The founders are credible, but you don't know them well. Estimated odds of a meaningful outcome: ~25%.";
+    },
+    obvious: {
+      label: "Stay at the safe job",
+      hint: "The safe job is fine. The startup is a coin flip with a long tail. You can always try later.",
+      feedback: "Stability has real value. But the regret in your 60s of never having tried tends to outweigh the regret of having tried and lost — and most people find that out too late to act on it.",
+      math: "Stay: ~certain salary. Atrophy risk: real but slow. 'Always later' rarely arrives.",
+      effects: { present: 10, future: -5, compoundFlat: 40 }
+    },
+    betterPath: {
+      label: "Take the startup",
+      hint: "If it works, life-changing. If not, you took the shot while you still had optionality.",
+      feedback: "The 'safe' job has hidden risks too — atrophy, ceiling, the wrong skills compounding. Choosing the high-variance path while you still have optionality is itself a form of compounding.",
+      math: "Conditional on credible team, equity EV often exceeds salary delta. But variance is enormous.",
+      effects: { present: -8, future: 14, compoundMult: 1.20 }
+    }
+  }
+];
+
+// ============================================================================
+// BONUS SCENARIOS — "teachable moments" where the obvious-future-self pick
+// is actually the trap. Both options give positive effects (no penalty).
+// ============================================================================
+
+const BONUS_SCENARIOS = [
+  {
+    id: 'productivity-bro', kind: 'bonus', insertAfterTurn: 4,
+    principle: 'Teachable moment', bias: 'Optimization theater',
+    situation: "Your phone shows an ad for a $40/mo 'second brain' system: pre-schedule every minute, track all habits, audit yourself weekly. The pitch is slick and the testimonials are glowing.",
+    obvious: {
+      label: "Sign up — relentless optimization",
+      hint: "Future-you wants discipline. Successful people optimize hard. This is what investing in yourself looks like.",
+      feedback: "Teachable moment. The pitch sounds like future-self thinking, but hyper-optimization is one of the most common ways to burn out. Three weeks in, you stop tracking. The system collects dust. Worse, the time spent setting it up came out of the actual work it was supposed to enable.",
+      math: "Self-improvement subscriptions: ~75% drop-off by month 3. Compounding comes from one or two boring habits done forever, not from systems.",
+      effects: { present: 5, future: 2, compoundFlat: 15 }
+    },
+    betterPath: {
+      label: "Skip — keep your paper notebook",
+      hint: "You've been getting by with paper. Maybe you're just resisting growth.",
+      feedback: "The boring habit beats the slick system. Future-self doesn't need an app stack; it needs one or two practices you'll actually maintain for a decade. You kept your $40/mo and you kept your time.",
+      math: "$40/mo × 12 × 30yr at 7% in an index fund ≈ $48,000. The notebook costs $4.",
+      effects: { present: 4, future: 8, compoundMult: 1.10 }
+    }
+  },
+  {
+    id: 'stock-picker', kind: 'bonus', insertAfterTurn: 8,
+    principle: 'Teachable moment', bias: 'Illusion of skill',
+    situation: "A coworker has been quietly beating the market picking individual stocks for 18 months. They walk you through their thesis. It's coherent. They offer to share their watchlist.",
+    obvious: {
+      label: "Start picking stocks — beat the market",
+      hint: "Their thesis is real and the returns are real. Index funds are for people who gave up. Future-you deserves alpha.",
+      feedback: "Teachable moment. About 90% of active managers underperform their benchmark over 15 years. Your coworker had an 18-month run — that's barely above noise. Skill in stock-picking is one of the most reliably mis-attributed things in finance.",
+      math: "S&P long-run: ~10%/yr. Average active retail after fees + tax drag: ~5%/yr. The gap compounds brutally.",
+      effects: { present: 6, future: 2, compoundFlat: 15 }
+    },
+    betterPath: {
+      label: "Stay in the index fund",
+      hint: "Boring. You'll watch others have stories, and you'll have averages.",
+      feedback: "The 'boring' choice that looks like present-self laziness is the actual future-self play, almost every time. The math on index investing is brutal in its honesty — most active strategies are paying for stories.",
+      math: "$10k × 1.10^30 ≈ $174k (index). Same money at 5% net ≈ $43k. ~4× difference.",
+      effects: { present: 3, future: 10, compoundMult: 1.12 }
+    }
+  }
+];
+
+// ============================================================================
+// Achievements
+// ============================================================================
+
+function picked(scenarioId, choiceKey) {
+  return state.history.some(h => h.scenarioId === scenarioId && h.choiceKey === choiceKey);
+}
+function regularHistory() {
+  return state.history.filter(h => h.kind === 'regular');
+}
+
+const ACHIEVEMENTS = [
+  {
+    name: "The Tortoise",
+    desc: "Picked the long view on every regular scenario",
+    test: () => {
+      const r = regularHistory();
+      return r.length === 10 && r.every(h => h.choiceKey === 'betterPath');
+    }
+  },
+  {
+    name: "The Hare",
+    desc: "Took the obvious choice every time",
+    test: () => {
+      const r = regularHistory();
+      return r.length === 10 && r.every(h => h.choiceKey === 'obvious');
+    }
+  },
+  {
+    name: "Marshmallow Master",
+    desc: "Waited it out on the marshmallow",
+    test: () => picked('marshmallow', 'betterPath')
+  },
+  {
+    name: "Compounder",
+    desc: "Final compound score ≥ 500",
+    test: () => state.compoundScore >= 500
+  },
+  {
+    name: "Balanced",
+    desc: "Both meters within 10 of each other",
+    test: () => Math.abs(state.presentSelf - state.futureSelf) <= 10
+  },
+  {
+    name: "Risk-Averse",
+    desc: "Took the bird-in-hand on both gambles",
+    test: () => picked('coin-flip', 'obvious') && picked('capstone', 'obvious')
+  },
+  {
+    name: "EV Maximizer",
+    desc: "Took the +EV bet on both gambles",
+    test: () => picked('coin-flip', 'betterPath') && picked('capstone', 'betterPath')
+  },
+  {
+    name: "Patient Streak",
+    desc: "Hit a 5+ run of future-self picks",
+    test: () => state.maxStreak >= 5
+  },
+  {
+    name: "Trap Spotter",
+    desc: "Saw through both bonus traps",
+    badgeClass: 'trap-spotter',
+    test: () => picked('productivity-bro', 'betterPath') && picked('stock-picker', 'betterPath')
+  },
+  {
+    name: "Caught in Optimization",
+    desc: "Fell for both bonus traps",
+    badgeClass: 'trap-caught',
+    test: () => picked('productivity-bro', 'obvious') && picked('stock-picker', 'obvious')
+  }
+];
+
+// ============================================================================
+// Badge icons (simple inline SVGs, drawn with currentColor)
+// ============================================================================
+
+const BADGE_ICONS = {
+  'The Tortoise': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16 Q12 5 21 16"/><line x1="3" y1="16" x2="21" y2="16"/><line x1="7" y1="16" x2="7" y2="19"/><line x1="17" y1="16" x2="17" y2="19"/><circle cx="22" cy="13" r="1.4" fill="currentColor" stroke="none"/></svg>`,
+  'The Hare': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 13 L6.5 3"/><path d="M13.5 13 L15.5 3"/><circle cx="11" cy="16" r="5"/><circle cx="9" cy="15.5" r="0.7" fill="currentColor" stroke="none"/></svg>`,
+  'Marshmallow Master': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="4" y="7" width="16" height="11" rx="3.5"/><line x1="4" y1="12.5" x2="20" y2="12.5" stroke-width="0.8" stroke-dasharray="2 2"/></svg>`,
+  'Compounder': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 Q9 19 12 14 T21 4"/><polyline points="16 4 21 4 21 9"/></svg>`,
+  'Balanced': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="4" x2="12" y2="20"/><line x1="4" y1="8" x2="20" y2="8"/><path d="M4 8 L2 13 H6 Z"/><path d="M20 8 L18 13 H22 Z"/><line x1="9" y1="20" x2="15" y2="20"/></svg>`,
+  'Risk-Averse': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3 L5 6 V12 C5 17 8 20 12 21 C16 20 19 17 19 12 V6 Z"/></svg>`,
+  'EV Maximizer': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="8" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1" fill="currentColor" stroke="none"/></svg>`,
+  'Patient Streak': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="3" x2="19" y2="3"/><line x1="5" y1="21" x2="19" y2="21"/><path d="M6 3 L18 21"/><path d="M18 3 L6 21"/></svg>`,
+  'Trap Spotter': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 12 C5 6 9 4 12 4 C15 4 19 6 22 12 C19 18 15 20 12 20 C9 20 5 18 2 12 Z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  'Caught in Optimization': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/><line x1="6" y1="6" x2="8" y2="8"/><line x1="16" y1="16" x2="18" y2="18"/><line x1="18" y1="6" x2="16" y2="8"/><line x1="8" y1="16" x2="6" y2="18"/></svg>`
+};
+
+// ============================================================================
+// State
+// ============================================================================
+
+let state;
+function initialState() {
+  return {
+    phase: 'intro',
+    regularTurn: 1,
+    presentSelf: 50, futureSelf: 50, compoundScore: 100,
+    patientStreak: 0, maxStreak: 0, streakArmed: false,
+    history: [],
+    pendingPayoffs: [],
+    queuedInterstitials: [],
+    currentInterstitial: null,
+    pendingBonus: null,
+    shownBonus: {},
+    wokeUp: false,
+    currentScenario: null,
+    slots: { a: 'obvious', b: 'betterPath' },
+    lastChoice: null, lastDeltas: null,
+    timePressure: false,
+    timer: null, timeLeft: 0,
+    snapshots: [{ t: 0, p: 50, f: 50, c: 100 }]
+  };
+}
+
+function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+function applyEffects(effects, isFutureSelfPick) {
+  const before = { p: state.presentSelf, f: state.futureSelf, c: state.compoundScore };
+  if (effects.present)  state.presentSelf = clamp(state.presentSelf + effects.present, 0, 100);
+  if (effects.future)   state.futureSelf  = clamp(state.futureSelf  + effects.future,  0, 100);
+  if (effects.compoundFlat) state.compoundScore += effects.compoundFlat;
+  if (effects.compoundMult) {
+    let mult = effects.compoundMult;
+    if (isFutureSelfPick && state.streakArmed) {
+      mult *= 1.25; state.streakArmed = false;
+    }
+    state.compoundScore *= mult;
+  }
+  state.compoundScore = Math.round(state.compoundScore * 100) / 100;
+  return {
+    p: state.presentSelf - before.p,
+    f: state.futureSelf - before.f,
+    c: state.compoundScore - before.c
+  };
+}
+
+function randomizeSlots() {
+  const flip = Math.random() < 0.5;
+  state.slots = flip
+    ? { a: 'obvious', b: 'betterPath' }
+    : { a: 'betterPath', b: 'obvious' };
+}
+
+function applyChoice(choiceKey) {
+  clearScenarioTimer();
+  const scenario = state.currentScenario;
+  const choice = scenario[choiceKey];
+  const isFutureSelf = choiceKey === 'betterPath';
+  // Bonus rounds don't penalize — that includes not consuming a
+  // hard-earned streak-armed bonus. The streak survives for the next
+  // regular betterPath pick.
+  const triggersStreak = isFutureSelf && scenario.kind === 'regular';
+  const deltas = applyEffects(choice.effects, triggersStreak);
+
+  // Streak bookkeeping only counts on REGULAR scenarios (bonus rounds
+  // are explicitly no-penalty teachable moments).
+  if (scenario.kind === 'regular') {
+    if (isFutureSelf) {
+      state.patientStreak += 1;
+      if (state.patientStreak > state.maxStreak) state.maxStreak = state.patientStreak;
+      if (state.patientStreak >= 3) state.streakArmed = true;
+    } else {
+      state.patientStreak = 0;
+      state.streakArmed = false;
+    }
+  }
+
+  if (choice.effects.payoffs) {
+    for (const p of choice.effects.payoffs) state.pendingPayoffs.push(p);
+  }
+
+  state.history.push({ scenarioId: scenario.id, kind: scenario.kind, choiceKey });
+  state.snapshots.push({
+    t: state.snapshots.length,
+    p: state.presentSelf, f: state.futureSelf, c: state.compoundScore
+  });
+  state.lastChoice = { choiceKey, scenario, choice };
+  state.lastDeltas = deltas;
+  state.phase = 'feedback';
+}
+
+function advanceFromFeedback() {
+  clearScenarioTimer();
+  const justFinished = state.currentScenario;
+
+  if (justFinished.kind === 'regular') {
+    if (state.regularTurn >= 10) { state.phase = 'epilogue'; return; }
+    const finishedTurn = state.regularTurn;
+    state.regularTurn += 1;
+
+    if (!state.wokeUp && state.futureSelf <= 10) {
+      state.wokeUp = true;
+      state.queuedInterstitials.push({
+        kind: 'wakeup',
+        label: "Wake-up call. Your future-self meter is in the red. You catch yourself in the mirror and don't recognize who you've been optimizing for. Future self gains a one-time +20.",
+        apply: () => { state.futureSelf = clamp(state.futureSelf + 20, 0, 100); }
+      });
+    }
+
+    const due = state.pendingPayoffs.filter(p => p.atTurn === state.regularTurn);
+    state.pendingPayoffs = state.pendingPayoffs.filter(p => p.atTurn !== state.regularTurn);
+    for (const p of due) {
+      state.queuedInterstitials.push({
+        kind: 'payoff', label: p.label,
+        apply: () => applyEffects(p.effects, false)
+      });
+    }
+
+    for (const b of BONUS_SCENARIOS) {
+      if (b.insertAfterTurn === finishedTurn && !state.shownBonus[b.id]) {
+        state.pendingBonus = b;
+        state.shownBonus[b.id] = true;
+        break;
+      }
+    }
+  }
+  // If we just finished a bonus, regularTurn stays put.
+
+  goToNextScene();
+}
+
+function advanceFromInterstitial() { goToNextScene(); }
+
+function goToNextScene() {
+  if (state.queuedInterstitials.length > 0) {
+    const it = state.queuedInterstitials.shift();
+    it.apply();
+    state.currentInterstitial = it;
+    state.phase = 'interstitial';
+    return;
+  }
+  if (state.pendingBonus) {
+    state.currentScenario = state.pendingBonus;
+    state.pendingBonus = null;
+    randomizeSlots();
+    state.phase = 'scenario';
+    return;
+  }
+  state.currentScenario = SCENARIOS[state.regularTurn - 1];
+  randomizeSlots();
+  state.phase = 'scenario';
+}
+
+// ============================================================================
+// Time-pressure timer
+// ============================================================================
+
+const TIMER_TOTAL = 10.0;
+function startScenarioTimer() {
+  clearScenarioTimer();
+  if (!state.timePressure) return;
+  if (!state.currentScenario || state.currentScenario.kind !== 'regular') return;
+  state.timeLeft = TIMER_TOTAL;
+  state.timer = setInterval(() => {
+    state.timeLeft -= 0.1;
+    const fill = document.querySelector('.timer-bar-fill');
+    if (fill) {
+      fill.style.width = Math.max(0, (state.timeLeft / TIMER_TOTAL) * 100) + '%';
+      if (state.timeLeft < 2.5) fill.classList.add('low');
+    }
+    if (state.timeLeft <= 0) {
+      clearScenarioTimer();
+      applyChoice('obvious');
+      render();
+    }
+  }, 100);
+}
+function clearScenarioTimer() {
+  if (state.timer) { clearInterval(state.timer); state.timer = null; }
+}
+
+// ============================================================================
+// Epilogue
+// ============================================================================
+
+function computeEpilogue() {
+  const r = regularHistory();
+  const bCount = r.filter(h => h.choiceKey === 'betterPath').length;
+  const compound = state.compoundScore;
+  const present = state.presentSelf;
+  const future = state.futureSelf;
+
+  if (bCount >= 8 && compound >= 400) {
+    return {
+      title: "20 years later — the patient one",
+      body: "You wake up in a house you own outright. Your retirement covers you regardless of what work you do. You're in shape, your friends still call, and the skills you slowly stacked over two decades make you weirdly valuable in your field. You don't feel virtuous — you feel like you got away with something. The choices weren't hard in the moment, just unfashionable. They added up."
+    };
+  }
+  if (bCount <= 2 && future < 30) {
+    return {
+      title: "20 years later — the dopamine years",
+      body: "You had great stories. The seasons of TV, the gadgets, the nights out — they were genuinely fun. But the bank account is thin, your knees hurt, two friendships you valued faded out, and the skill ceiling you hit five years ago hasn't moved. Some of this was bad luck. Most of it was a long series of small choices that each, individually, felt fine."
+    };
+  }
+  if (Math.abs(present - future) <= 10) {
+    return {
+      title: "20 years later — the middle path",
+      body: "You're neither rich nor wrecked. You enjoyed yourself; you also planted enough seeds that some of them grew. You wonder sometimes what would have happened if you'd been more disciplined, or more carefree. Both versions of you are still visible, and neither dominates."
+    };
+  }
+  if (future > present) {
+    return {
+      title: "20 years later — the slow build",
+      body: "Things are working out. Not in a fireworks way — in a quiet, durable way. You didn't optimize for the highlight reel, and now you don't need one. The compounding choices you barely noticed making have stacked into something solid."
+    };
+  }
+  return {
+    title: "20 years later — the easy path, mostly",
+    body: "You took most of the obvious choices. They were obvious for a reason — they paid out immediately. But the ones you skipped were the ones that would have paid out over decades. You're fine. Just less of yourself than you could have been."
+  };
+}
+
+// ============================================================================
+// Rendering
+// ============================================================================
+
+const app = document.getElementById('app');
+
+function fmtSigned(n) {
+  if (!n) return null;
+  const rounded = Math.round(n * 100) / 100;
+  const sign = rounded > 0 ? '+' : '';
+  return `${sign}${rounded}`;
+}
+
+function renderMeters() {
+  const streakLabel = state.streakArmed
+    ? `streak armed ×1.25`
+    : state.patientStreak > 0 ? `streak ${state.patientStreak}` : '';
+  return `
+    <div class="meters">
+      <div class="meter">
+        <div class="meter-row">
+          <span class="name">Present self</span>
+          <span class="val">${Math.round(state.presentSelf)}</span>
+        </div>
+        <div class="bar"><div class="bar-fill present" style="width:${state.presentSelf}%"></div></div>
+      </div>
+      <div class="meter">
+        <div class="meter-row">
+          <span class="name">Future self</span>
+          <span class="val">${Math.round(state.futureSelf)}</span>
+        </div>
+        <div class="bar"><div class="bar-fill future" style="width:${state.futureSelf}%"></div></div>
+      </div>
+      <div class="compound-row">
+        <span class="compound-label">Compound score
+          <span class="streak ${state.streakArmed ? 'armed' : ''}">${streakLabel}</span>
+        </span>
+        <span class="compound-value">${Math.round(state.compoundScore)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderHeader() {
+  const cur = state.currentScenario;
+  let right;
+  if (cur && cur.kind === 'bonus') {
+    right = `<div class="turn-indicator bonus">★ Bonus round</div>`;
+  } else {
+    right = `<div class="turn-indicator">Turn ${state.regularTurn} / 10</div>`;
+  }
+  return `
+    <div class="header">
+      <div class="title">HEMINGWAY <span class="accent">·</span> MUNGER</div>
+      ${right}
+    </div>
+  `;
+}
+
+function renderIntro() {
+  app.innerHTML = `
+    <div class="intro fade-in">
+      <div class="intro-eyebrow">A short-game / long-game thought experiment</div>
+      <h1>Hemingway &amp; Munger</h1>
+      <p>Ten turns. Each one offers two choices. One rewards <strong style="color:var(--present)">Hemingway-you</strong> — fast, present, indulgent. The other rewards <strong style="color:var(--future)">Munger-you</strong> — patient, compounding, future. Two bonus rounds between turns will test whether you can tell the difference.</p>
+      <ul>
+        <li>Two meters + a compound score track who you're optimizing for.</li>
+        <li>After you choose, you'll hear what each option's inner voice was whispering — and see the math.</li>
+        <li>Bonus rounds give a boost either way, but one option is a trap dressed up as a future-self pick.</li>
+      </ul>
+      <div class="options-group">
+        <h3>Options</h3>
+        <label class="option-row">
+          <input type="checkbox" id="opt-time" ${state.timePressure ? 'checked' : ''} />
+          <span class="opt-text">Time-pressure mode (10 sec)
+            <div class="opt-desc">Each regular turn has a 10-second timer. If it runs out, your gut picks the obvious option for you. Simulates System-1 decisions.</div>
+          </span>
+        </label>
+      </div>
+      <button class="start-btn" id="start-btn">Begin · Turn 1</button>
+      <div class="footnote">Tip: keyboard works too — <strong>A</strong> / <strong>B</strong> to choose, <strong>Enter</strong> to advance.</div>
+    </div>
+  `;
+  document.getElementById('opt-time').addEventListener('change', e => { state.timePressure = e.target.checked; });
+  document.getElementById('start-btn').addEventListener('click', () => {
+    state.currentScenario = SCENARIOS[0];
+    randomizeSlots();
+    state.phase = 'scenario';
+    render();
+  });
+}
+
+function renderScenario() {
+  const sc = state.currentScenario;
+  const situation = sc.situationFn ? sc.situationFn(state) : sc.situation;
+  const isBonus = sc.kind === 'bonus';
+  const aChoice = sc[state.slots.a];
+  const bChoice = sc[state.slots.b];
+
+  const timerHtml = (state.timePressure && !isBonus) ? `
+    <div class="timer-wrap">
+      <div class="timer-label">Time pressure — your gut will pick if you don't</div>
+      <div class="timer-bar"><div class="timer-bar-fill"></div></div>
+    </div>
+  ` : '';
+
+  const principleClass = isBonus ? 'principle bonus' : 'principle';
+
+  app.innerHTML = `
+    ${renderHeader()}
+    ${renderMeters()}
+    ${timerHtml}
+    <div class="card fade-in">
+      <span class="${principleClass}">${sc.principle}</span>
+      <span class="bias-chip">${sc.bias}</span>
+      <p class="situation">${situation}</p>
+      <div class="choices">
+        <button class="choice-btn" data-slot="a">
+          <span class="kbd">A</span>
+          <span class="label">${aChoice.label}</span>
+        </button>
+        <button class="choice-btn" data-slot="b">
+          <span class="kbd">B</span>
+          <span class="label">${bChoice.label}</span>
+        </button>
+      </div>
+    </div>
+  `;
+  for (const btn of app.querySelectorAll('.choice-btn')) {
+    btn.addEventListener('click', () => {
+      const slot = btn.dataset.slot;
+      const choiceKey = state.slots[slot];
+      applyChoice(choiceKey);
+      render();
+    });
+  }
+  startScenarioTimer();
+}
+
+function renderFeedback() {
+  const { choiceKey, scenario, choice } = state.lastChoice;
+  const d = state.lastDeltas;
+  const isBonus = scenario.kind === 'bonus';
+  const slotLetter = state.slots.a === choiceKey ? 'A' : 'B';
+  const chips = [];
+  if (d.p) chips.push(`<span class="delta pres">Present ${fmtSigned(d.p)}</span>`);
+  if (d.f) chips.push(`<span class="delta fut">Future ${fmtSigned(d.f)}</span>`);
+  if (d.c) chips.push(`<span class="delta cmp">Compound ${fmtSigned(d.c)}</span>`);
+
+  const aChoice = scenario[state.slots.a];
+  const bChoice = scenario[state.slots.b];
+  const voiceRow = (letter, c, slotKey) => `
+    <div class="voice ${state.slots[slotKey] === choiceKey ? 'chosen' : ''}">
+      <div class="v-head">
+        <span><span class="v-letter">${letter}</span> · ${c.label}</span>
+        ${state.slots[slotKey] === choiceKey ? '<span class="v-pick">YOUR PICK</span>' : ''}
+      </div>
+      <div class="v-text">${c.hint}</div>
+    </div>
+  `;
+  const voicesHtml = `
+    <div class="voices">
+      <div class="voices-title">What each inner voice was whispering</div>
+      ${voiceRow('A', aChoice, 'a')}
+      ${voiceRow('B', bChoice, 'b')}
+    </div>
+  `;
+
+  const mathHtml = choice.math ? `
+    <div class="math-box"><span class="math-tag">Math</span>${choice.math}</div>
+  ` : '';
+
+  const principleClass = isBonus ? 'principle bonus' : 'principle';
+  const fbClass = isBonus ? 'feedback bonus' : 'feedback';
+  const isFinalRegular = scenario.kind === 'regular' && state.regularTurn >= 10;
+
+  app.innerHTML = `
+    ${renderHeader()}
+    ${renderMeters()}
+    <div class="card fade-in">
+      <span class="${principleClass}">${scenario.principle}</span>
+      <span class="bias-chip">${scenario.bias}</span>
+      <div class="${fbClass}">
+        <div class="choice-made">You chose ${slotLetter} — ${choice.label}</div>
+        ${choice.feedback}
+        <div class="deltas">${chips.join('')}</div>
+        ${mathHtml}
+      </div>
+      ${voicesHtml}
+      <button class="next-btn" id="next-btn">${isFinalRegular ? 'See your 20-year epilogue →' : 'Next →'}</button>
+    </div>
+  `;
+  document.getElementById('next-btn').addEventListener('click', () => {
+    advanceFromFeedback();
+    render();
+  });
+}
+
+function renderInterstitial() {
+  const it = state.currentInterstitial;
+  const kind = it.kind === 'wakeup' ? 'wakeup' : '';
+  const tag = it.kind === 'wakeup' ? 'Wake-up call' : 'Compound dividend';
+  app.innerHTML = `
+    ${renderHeader()}
+    ${renderMeters()}
+    <div class="card fade-in">
+      <div class="interstitial ${kind}">
+        <div class="tag">${tag}</div>
+        ${it.label}
+      </div>
+      <button class="next-btn" id="next-btn">Continue →</button>
+    </div>
+  `;
+  document.getElementById('next-btn').addEventListener('click', () => {
+    advanceFromInterstitial();
+    render();
+  });
+}
+
+function renderChart() {
+  const pts = state.snapshots;
+  if (pts.length < 2) return '';
+  const W = 560, H = 110, PAD_X = 28, PAD_Y = 14;
+  const xStep = (W - 2 * PAD_X) / Math.max(pts.length - 1, 1);
+  const yFor = v => H - PAD_Y - (v / 100) * (H - 2 * PAD_Y);
+
+  // For compound, log-scale to fit
+  const maxC = Math.max(...pts.map(p => p.c), 100);
+  const cYFor = v => {
+    const t = Math.log10(Math.max(v, 1)) / Math.log10(Math.max(maxC, 10));
+    return H - PAD_Y - t * (H - 2 * PAD_Y);
+  };
+
+  function path(values) {
+    return values.map((v, i) => `${i === 0 ? 'M' : 'L'} ${(PAD_X + i * xStep).toFixed(1)} ${v.toFixed(1)}`).join(' ');
+  }
+  const presPath = path(pts.map(p => yFor(p.p)));
+  const futPath  = path(pts.map(p => yFor(p.f)));
+  const cmpPath  = path(pts.map(p => cYFor(p.c)));
+
+  return `
+    <div class="chart-wrap">
+      <div class="chart-title">Run evolution</div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:${H}px" preserveAspectRatio="none">
+        <line x1="${PAD_X}" y1="${H - PAD_Y}" x2="${W - PAD_X}" y2="${H - PAD_Y}" stroke="#3a3f4d" stroke-width="1"/>
+        <line x1="${PAD_X}" y1="${PAD_Y}" x2="${W - PAD_X}" y2="${PAD_Y}" stroke="#2a2f3d" stroke-width="1" stroke-dasharray="2 4"/>
+        <path d="${cmpPath}" stroke="#c89cff" stroke-width="2" fill="none" opacity="0.85"/>
+        <path d="${presPath}" stroke="#ff8a5b" stroke-width="2" fill="none"/>
+        <path d="${futPath}" stroke="#5fd9a7" stroke-width="2" fill="none"/>
+      </svg>
+      <div class="chart-legend">
+        <span><span class="sw pres"></span>Present</span>
+        <span><span class="sw fut"></span>Future</span>
+        <span><span class="sw cmp"></span>Compound (log)</span>
+      </div>
+    </div>
+  `;
+}
+
+function buildShareText(ep, unlocked) {
+  const lines = [
+    "HEMINGWAY & MUNGER — my run",
+    "===========================",
+    `Present self:  ${Math.round(state.presentSelf)} / 100`,
+    `Future self:   ${Math.round(state.futureSelf)} / 100`,
+    `Compound:      ${Math.round(state.compoundScore)}`,
+    `Longest patient streak: ${state.maxStreak}`,
+    "",
+    `Epilogue: ${ep.title}`,
+    "",
+    unlocked.length ? `Badges (${unlocked.length}): ${unlocked.map(b => b.name).join(', ')}` : "Badges: none"
+  ];
+  return lines.join('\n');
+}
+
+function computeBalanceCaveat() {
+  const r = regularHistory();
+  const bCount = r.filter(h => h.choiceKey === 'betterPath').length;
+  const monk = bCount >= 9 || (state.futureSelf >= 75 && state.presentSelf <= 25);
+  if (!monk) return null;
+  return "There's a version of future-self that's so optimized it forgets the point — skipping the wedding to save $800, cutting friends who don't 'add value,' scheduling every weekend down to the minute. Even Munger reads Poor Richard's Almanack in his easy chair. The peaches you bought on the back-roads drive were part of the run, not noise to filter out. Aim for the long game — but make sure there's still a game to be in when you get there.";
+}
+
+function renderEpilogue() {
+  const ep = computeEpilogue();
+  const caveat = computeBalanceCaveat();
+  const allBadges = ACHIEVEMENTS.map(a => ({ ...a, earned: a.test() }));
+  const unlocked = allBadges.filter(b => b.earned);
+  const badgesHtml = allBadges.map(b => `
+    <div class="badge ${b.earned ? 'earned' : ''} ${b.badgeClass || ''}">
+      <div class="icon">${BADGE_ICONS[b.name] || ''}</div>
+      <div class="b-name">${b.name}</div>
+      <div class="b-desc">${b.desc}</div>
+    </div>
+  `).join('');
+
+  app.innerHTML = `
+    <div class="header">
+      <div class="title">HEMINGWAY <span class="accent">·</span> MUNGER</div>
+      <div class="turn-indicator">Run complete</div>
+    </div>
+    <div class="card epilogue fade-in">
+      <div class="sub">Epilogue</div>
+      <h2>${ep.title}</h2>
+      <div class="body">${ep.body}</div>
+      ${caveat ? `<div class="epilogue-ps"><div class="ps-tag">P.S. — a caution on monk mode</div>${caveat}</div>` : ''}
+      <div class="stat-grid">
+        <div class="stat"><div class="lbl">Present</div><div class="v pres">${Math.round(state.presentSelf)}</div></div>
+        <div class="stat"><div class="lbl">Future</div><div class="v fut">${Math.round(state.futureSelf)}</div></div>
+        <div class="stat"><div class="lbl">Compound</div><div class="v cmp">${Math.round(state.compoundScore)}</div></div>
+      </div>
+      ${renderChart()}
+      <div class="chart-title" style="text-align:center;margin-bottom:8px">${unlocked.length} / ${allBadges.length} badges earned</div>
+      <div class="badges">${badgesHtml}</div>
+      <button class="next-btn" id="restart-btn">Play again</button>
+      <button class="secondary-btn" id="copy-btn">Copy run summary <span class="copy-toast" id="copy-toast">Copied!</span></button>
+      <div class="footnote">Longest patient streak: ${state.maxStreak}</div>
+    </div>
+  `;
+  document.getElementById('restart-btn').addEventListener('click', () => {
+    const keep = { timePressure: state.timePressure };
+    state = initialState();
+    Object.assign(state, keep);
+    state.currentScenario = SCENARIOS[0];
+    randomizeSlots();
+    state.phase = 'scenario';
+    render();
+  });
+  document.getElementById('copy-btn').addEventListener('click', async () => {
+    const text = buildShareText(ep, unlocked);
+    try {
+      await navigator.clipboard.writeText(text);
+      const t = document.getElementById('copy-toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1600);
+    } catch {
+      window.prompt('Copy your run:', text);
+    }
+  });
+}
+
+function render() {
+  clearScenarioTimer();
+  if (state.phase === 'intro') return renderIntro();
+  if (state.phase === 'scenario') return renderScenario();
+  if (state.phase === 'feedback') return renderFeedback();
+  if (state.phase === 'interstitial') return renderInterstitial();
+  if (state.phase === 'epilogue') return renderEpilogue();
+}
+
+// ============================================================================
+// Keyboard
+// ============================================================================
+
+document.addEventListener('keydown', (e) => {
+  const key = e.key.toLowerCase();
+  if (state.phase === 'intro' && (key === 'enter' || key === ' ')) {
+    e.preventDefault();
+    state.currentScenario = SCENARIOS[0];
+    randomizeSlots();
+    state.phase = 'scenario';
+    render();
+    return;
+  }
+  if (state.phase === 'scenario') {
+    if (key === 'a' || key === '1') {
+      applyChoice(state.slots.a); render(); return;
+    }
+    if (key === 'b' || key === '2') {
+      applyChoice(state.slots.b); render(); return;
+    }
+  }
+  if (state.phase === 'feedback' && (key === 'enter' || key === ' ')) {
+    e.preventDefault();
+    advanceFromFeedback(); render(); return;
+  }
+  if (state.phase === 'interstitial' && (key === 'enter' || key === ' ')) {
+    e.preventDefault();
+    advanceFromInterstitial(); render(); return;
+  }
+});
+
+// ============================================================================
+// Boot
+// ============================================================================
+
+state = initialState();
+render();
+</script>
+</body>
+</html>

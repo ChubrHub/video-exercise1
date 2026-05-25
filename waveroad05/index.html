@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Wavelength platform roadmap from May to December 2026 across five workstream lanes — A360 Assessment, You View, Crew View, Launch View, and Other.">
+<meta name="robots" content="noindex, nofollow">
+<title>Wavelength Platform Roadmap — May–Dec 2026</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #F7F6F2;
+  --text-primary: #2C2C2A;
+  --text-secondary: #5F5E5A;
+  --text-tertiary: #888780;
+  --border-tertiary: rgba(0,0,0,0.1);
+  --border-secondary: rgba(0,0,0,0.18);
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1A1A1A;
+    --bg-secondary: #232321;
+    --text-primary: #E8E6DD;
+    --text-secondary: #B4B2A9;
+    --text-tertiary: #888780;
+    --border-tertiary: rgba(255,255,255,0.1);
+    --border-secondary: rgba(255,255,255,0.18);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); color: var(--text-primary); background: var(--bg-primary); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0 }
+.page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+.page-header { margin-bottom: 1.5rem; }
+.page-eyebrow { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .12em; font-weight: 500; margin-bottom: 6px; }
+.page-title { font-size: 28px; font-weight: 500; margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.2; }
+.page-sub { font-size: 14px; color: var(--text-secondary); max-width: 720px; line-height: 1.55; }
+.page-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 10px; font-family: var(--font-mono); letter-spacing: -0.01em; }
+.rm-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -0.25rem; padding: 0 0.25rem; }
+.rm-inner { min-width: 820px; }
+.rm-leg { display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--text-secondary);margin:1.75rem 0 1.25rem;align-items:center }
+.rm-lc { font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.08em;font-weight:500 }
+.rm-chip { display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--radius-md);cursor:pointer;user-select:none;transition:opacity .15s, background .15s;border:0.5px solid var(--border-tertiary);background:var(--bg-primary) }
+.rm-chip:hover { background:var(--bg-secondary) }
+.rm-chip.off { opacity:.4 }
+.rm-d { width:10px;height:10px;border-radius:2px;flex-shrink:0 }
+.rm-d.crit { background:#F0997B } .rm-d.high { background:#EF9F27 } .rm-d.med { background:#85B7EB }
+.rm-b { display:inline-block;width:14px;height:10px;border-radius:2px;border:0.5px solid var(--border-tertiary) }
+.rm-b.ea { background:#E1F5EE } .rm-b.ga { background:#FAEEDA } .rm-b.po { background:#EEEDFE }
+.rm-lm { display:inline-flex;align-items:center;gap:6px }
+.rm-g { display:grid;grid-template-columns:230px 1fr;column-gap:0;align-items:center }
+.rm-mr { display:grid;grid-template-columns:repeat(8,1fr);grid-column:2;padding:0 0 8px }
+.rm-mo { font-size:11px;color:var(--text-secondary);text-align:center;padding:6px 0;border-left:0.5px solid var(--border-tertiary);font-weight:500 }
+.rm-mo:first-child { border-left-color:transparent }
+.rm-mo.ge { border-left:1px solid #1D9E75 }
+.rm-mo.pe { border-left:1px solid #BA7517 }
+.rm-lh { grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:16px 0 8px;margin-top:6px;border-top:0.5px solid var(--border-secondary) }
+.rm-li { font-size:17px;color:var(--text-secondary) }
+.rm-ln { font-size:12px;font-weight:500;color:var(--text-primary);text-transform:uppercase;letter-spacing:.08em }
+.rm-lt { font-size:10px;color:var(--text-tertiary);font-family:var(--font-mono);margin-left:auto }
+.rm-l { padding:7px 14px 7px 0;font-size:13px;color:var(--text-primary);line-height:1.35 }
+.rm-w { display:block;font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono);margin-top:3px;letter-spacing:-.02em;line-height:1.3 }
+.rm-t { position:relative;height:32px;margin:2px 0;background:linear-gradient(to right,#E1F5EE 0,#E1F5EE 24.9%,#FAEEDA 24.9%,#FAEEDA 62.45%,#EEEDFE 62.45%,#EEEDFE 100%);border-radius:3px }
+.rm-r { position:absolute;top:5px;height:22px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 8px;font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;transition:transform .12s,outline .12s;border:0.5px solid;box-sizing:border-box;min-width:10px }
+.rm-r:hover { transform:translateY(-1px);z-index:3;outline:1.5px solid currentColor;outline-offset:1px }
+.rm-r:focus-visible { outline:2px solid var(--text-primary);outline-offset:2px }
+.rm-r.crit { background:#F0997B;color:#4A1B0C;border-color:#993C1D }
+.rm-r.high { background:#EF9F27;color:#412402;border-color:#854F0B }
+.rm-r.med { background:#85B7EB;color:#042C53;border-color:#185FA5 }
+.rm-r.hd { display:none }
+.rm-ml { padding:0 14px 0 0;font-size:11px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.06em;align-self:start;border-top:0.5px solid var(--border-secondary);margin-top:18px;padding-top:24px }
+.rm-mt { grid-column:2;position:relative;height:58px;border-top:0.5px solid var(--border-secondary);margin-top:18px;padding-top:14px }
+.rm-m { position:absolute;transform:translateX(-50%);cursor:pointer;display:flex;flex-direction:column;align-items:center;top:10px }
+.rm-md { width:14px;height:14px;background:#1D9E75;transform:rotate(45deg);border:0.5px solid #04342C;transition:transform .12s }
+.rm-m:hover .rm-md { transform:rotate(45deg) scale(1.18) }
+.rm-mc { font-size:10px;color:var(--text-secondary);margin-top:10px;white-space:nowrap;line-height:1.3;text-align:center }
+.rm-mc b { display:block;color:var(--text-primary);font-weight:500;font-size:11px }
+@media (prefers-color-scheme: dark) {
+.rm-t { background:linear-gradient(to right,rgba(29,158,117,.2) 0,rgba(29,158,117,.2) 24.9%,rgba(186,117,23,.2) 24.9%,rgba(186,117,23,.2) 62.45%,rgba(127,119,221,.22) 62.45%,rgba(127,119,221,.22) 100%) }
+.rm-r.crit { background:#712B13;color:#F5C4B3;border-color:#D85A30 }
+.rm-r.high { background:#633806;color:#FAC775;border-color:#BA7517 }
+.rm-r.med { background:#0C447C;color:#B5D4F4;border-color:#378ADD }
+.rm-b.ea { background:rgba(29,158,117,.32) } .rm-b.ga { background:rgba(186,117,23,.32) } .rm-b.po { background:rgba(127,119,221,.32) }
+.rm-d.crit { background:#D85A30 } .rm-d.high { background:#BA7517 } .rm-d.med { background:#378ADD }
+.rm-md { background:#5DCAA5;border-color:#9FE1CB }
+.rm-mo.ge { border-left-color:#5DCAA5 } .rm-mo.pe { border-left-color:#EF9F27 }
+}
+.page-foot { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border-tertiary); font-size: 11px; color: var(--text-tertiary); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; line-height: 1.5; }
+.page-foot strong { font-weight: 500; color: var(--text-secondary); }
+.mo { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 100; }
+.mo.open { opacity: 1; pointer-events: auto; }
+.mo-c { background: var(--bg-primary); border-radius: var(--radius-lg); max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 1.75rem 1.75rem 1.5rem; box-shadow: 0 12px 48px rgba(0,0,0,0.25); border: 0.5px solid var(--border-secondary); }
+.mo-h { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+.mo-t { font-size: 18px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
+.mo-x { background: none; border: none; cursor: pointer; padding: 4px 10px; border-radius: 4px; font-size: 22px; color: var(--text-secondary); line-height: 1; flex-shrink: 0; }
+.mo-x:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.mo-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; align-items: center; font-size: 12px; color: var(--text-tertiary); }
+.mo-pr { padding: 3px 9px; border-radius: 4px; font-weight: 500; font-size: 11px; letter-spacing: 0.02em; }
+.mo-pr.crit { background: #F0997B; color: #4A1B0C; }
+.mo-pr.high { background: #EF9F27; color: #412402; }
+.mo-pr.med { background: #85B7EB; color: #042C53; }
+.mo-dates { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
+.mo-wav { font-family: var(--font-mono); font-size: 11px; }
+.mo-lane { color: var(--text-tertiary); }
+.mo-body { font-size: 14px; line-height: 1.65; color: var(--text-primary); }
+@media (prefers-color-scheme: dark) {
+.mo-pr.crit { background: #712B13; color: #F5C4B3; }
+.mo-pr.high { background: #633806; color: #FAC775; }
+.mo-pr.med { background: #0C447C; color: #B5D4F4; }
+}
+@media (max-width: 720px) {
+  .page { padding: 1.5rem 1rem 2rem; }
+  .page-title { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="page-header">
+<div class="page-eyebrow">Internal · waveroad05</div>
+<h1 class="page-title">Wavelength platform roadmap</h1>
+<div class="page-sub">May 2026 → December 2026, organized into five workstream lanes (A360 Assessment, You View, Crew View, Launch View, Other) and gated by three milestones — EA Go-Live on 6/30, GA Go-Live on 9/30, and Polish + Future Planning on 12/31. Click any bar for workstream detail. Filter chips below scope the view by priority.</div>
+<div class="page-meta">Last updated · May 25, 2026 · Confidential</div>
+</header>
+<h2 class="sr-only">Wavelength platform roadmap May to December 2026 across five lanes — A360 Assessment, You View, Crew View, Launch View, Other — with phase shading for Early Access, General Access, and Polish plus Future Planning, and three milestone go-lives at 6/30, 9/30, and 12/31.</h2>
+<div class="rm-leg">
+<span class="rm-lc">Priority</span>
+<span class="rm-chip" data-prio="crit" onclick="rmTP('crit',this)"><span class="rm-d crit"></span>Critical</span>
+<span class="rm-chip" data-prio="high" onclick="rmTP('high',this)"><span class="rm-d high"></span>High</span>
+<span class="rm-chip" data-prio="med" onclick="rmTP('med',this)"><span class="rm-d med"></span>Medium</span>
+<span class="rm-lc" style="margin-left:6px">Phase</span>
+<span class="rm-lm"><span class="rm-b ea"></span>EA</span>
+<span class="rm-lm"><span class="rm-b ga"></span>GA</span>
+<span class="rm-lm"><span class="rm-b po"></span>Polish &amp; plan</span>
+<span class="rm-lc" style="margin-left:6px">Milestone</span>
+<span class="rm-lm"><span style="width:10px;height:10px;background:#1D9E75;transform:rotate(45deg);display:inline-block"></span>Go-live</span>
+</div>
+<div class="rm-scroll"><div class="rm-inner">
+<div class="rm-g">
+<div></div>
+<div class="rm-mr">
+<div class="rm-mo">May 26</div><div class="rm-mo">Jun 26</div><div class="rm-mo ge">Jul 26</div><div class="rm-mo">Aug 26</div><div class="rm-mo">Sep 26</div><div class="rm-mo pe">Oct 26</div><div class="rm-mo">Nov 26</div><div class="rm-mo">Dec 26</div>
+</div>
+<div class="rm-lh" style="border-top:none;margin-top:0;padding-top:8px"><i class="ti ti-clipboard-data rm-li" aria-hidden="true"></i><span class="rm-ln">A360 assessment · foundation</span><span class="rm-lt">Lane 01</span></div>
+<div class="rm-l">Cleanup, Roger wiring, Arbiter rename, prev. refiners<span class="rm-w">WAV-606 · 355–357 · misc</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:8.57%;width:16.33%" data-prio="high" onclick="oi('a1')" aria-label="Cleanup workstream, May 22 to June 30">5/22 → 6/30</button></div>
+<div class="rm-l">New refiners: Z5 · D5 · E5+E5x<span class="rm-w">Social energy · drives · routing</span></div>
+<div class="rm-t"><button class="rm-r crit" style="left:9.80%;width:15.10%" data-prio="crit" onclick="oi('a2')" aria-label="New refiners Z5 D5 E5, May 25 to June 30">5/25 → 6/30</button></div>
+<div class="rm-l">Refiners: Q5 · V5 · H5<span class="rm-w">WAV-288 · 326 · 346 · 417 · 444 · 465 · 466</span></div>
+<div class="rm-t"><button class="rm-r crit" style="left:24.90%;width:37.55%" data-prio="crit" onclick="oi('a3')" aria-label="Refiners Q5 V5 H5, July 1 to September 30">7/1 → 9/30</button></div>
+<div class="rm-l">Assessment retake versioning<span class="rm-w">Master file + pinned preferred lens</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:9.80%;width:52.65%" data-prio="high" onclick="oi('a4')" aria-label="Retake versioning, May 25 to September 30">5/25 → 9/30</button></div>
+<div class="rm-l">Editable categories + structural refinement<span class="rm-w">PM/Architect signoff workflow</span></div>
+<div class="rm-t"><button class="rm-r med" style="left:24.90%;width:37.55%" data-prio="med" onclick="oi('a5')" aria-label="Editable categories, July 1 to September 30">7/1 → 9/30</button></div>
+<div class="rm-lh"><i class="ti ti-user rm-li" aria-hidden="true"></i><span class="rm-ln">You view · individual experience</span><span class="rm-lt">Lane 02</span></div>
+<div class="rm-l">You View app — Base · Ops · Specs · Aims · Source<span class="rm-w">WAV-288 · 326 · 465 · 466</span></div>
+<div class="rm-t"><button class="rm-r crit" style="left:9.80%;width:15.10%" data-prio="crit" onclick="oi('y1')" aria-label="You View app foundation, May 25 to June 30">5/25 → 6/30</button></div>
+<div class="rm-l">Response Field (ARC-EQ) — NNARC + E5x + gating<span class="rm-w">WAV-416 · 417 · 444</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:24.90%;width:75.10%" data-prio="high" onclick="oi('y2')" aria-label="Response Field, July 1 to December 31">7/1 → 12/31</button></div>
+<div class="rm-l">My Wavelength: The Clear Signal<span class="rm-w">WAV-605 · Aims capstone</span></div>
+<div class="rm-t"><button class="rm-r med" style="left:62.45%;width:37.55%" data-prio="med" onclick="oi('y3')" aria-label="My Wavelength Clear Signal, October 1 to December 31">10/1 → 12/31</button></div>
+<div class="rm-l">You View desktop — enhanced insights<span class="rm-w">WAV-418 · 273 · 454 · 362</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:62.45%;width:37.55%" data-prio="high" onclick="oi('y4')" aria-label="You View desktop, October 1 to December 31">10/1 → 12/31</button></div>
+<div class="rm-lh"><i class="ti ti-users rm-li" aria-hidden="true"></i><span class="rm-ln">Crew view · team lead experience</span><span class="rm-lt">Lane 03</span></div>
+<div class="rm-l">Team member crew view (app)<span class="rm-w">Refines click-on-individual · WAV-412 tie-in</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:9.80%;width:15.10%" data-prio="high" onclick="oi('c1')" aria-label="Team member crew view, May 25 to June 30">5/25 → 6/30</button></div>
+<div class="rm-l">Crew desktop EA — team lead foundation<span class="rm-w">WAV-284 · 288 · 410 · 411 · 465 · 466</span></div>
+<div class="rm-t"><button class="rm-r crit" style="left:0%;width:18.78%" data-prio="crit" onclick="oi('c2')" aria-label="Crew desktop EA, May 1 to June 15">5/1 → 6/15</button></div>
+<div class="rm-l">Team groupings + crew read<span class="rm-w">WAV-346 · 607</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:12.65%;width:12.24%" data-prio="high" onclick="oi('c3')" aria-label="Team groupings and crew read, June 1 to June 30">6/1 → 6/30</button></div>
+<div class="rm-l">CrewArcs (5): Clarity · Competence · Cohesion · Coordination · Candor<span class="rm-w">Team-level proto-Prismatics X5s</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:24.90%;width:37.55%" data-prio="high" onclick="oi('c4')" aria-label="CrewArcs, July 1 to September 30">7/1 → 9/30</button></div>
+<div class="rm-l">Crew desktop GA — full lead + CHRO + applicant<span class="rm-w">WAV-451 · Lou Adler ranking</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:24.90%;width:37.55%" data-prio="high" onclick="oi('c5')" aria-label="Crew desktop GA, July 1 to September 30">7/1 → 9/30</button></div>
+<div class="rm-l">Plain language + own/dyad/small team pulses<span class="rm-w">Self-selectable crew</span></div>
+<div class="rm-t"><button class="rm-r med" style="left:24.90%;width:37.55%" data-prio="med" onclick="oi('c6')" aria-label="Plain language and small team pulses, July 1 to September 30">7/1 → 9/30</button></div>
+<div class="rm-lh"><i class="ti ti-rocket rm-li" aria-hidden="true"></i><span class="rm-ln">Launch view · amplifiers &amp; growth</span><span class="rm-lt">Lane 04</span></div>
+<div class="rm-l">Amplifier module + UIP landing<span class="rm-w">WAV-365 · 603</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:9.80%;width:15.10%" data-prio="high" onclick="oi('l1')" aria-label="Amplifier module and UIP landing, May 25 to June 30">5/25 → 6/30</button></div>
+<div class="rm-l">Five amplifier epicenters + training<span class="rm-w">WAV-603 · A360 Pro · 3 levels deep</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:24.90%;width:37.55%" data-prio="high" onclick="oi('l2')" aria-label="Five amplifier epicenters, July 1 to September 30">7/1 → 9/30</button></div>
+<div class="rm-l">UIP wiring + relativized scores<span class="rm-w">WAV-273 · every gauge linked</span></div>
+<div class="rm-t"><button class="rm-r high" style="left:62.45%;width:37.55%" data-prio="high" onclick="oi('l3')" aria-label="UIP wiring and relativized scores, October 1 to December 31">10/1 → 12/31</button></div>
+<div class="rm-lh"><i class="ti ti-stack-2 rm-li" aria-hidden="true"></i><span class="rm-ln">Other · cross-cutting &amp; future planning</span><span class="rm-lt">Lane 05</span></div>
+<div class="rm-l">Quick surveys for outreach + speaking<span class="rm-w">10-question briefs · v0.3 stance</span></div>
+<div class="rm-t"><button class="rm-r med" style="left:24.90%;width:6.12%" data-prio="med" onclick="oi('o1')" aria-label="Quick surveys, July 1 to July 15"></button></div>
+<div class="rm-l">Notifications system<span class="rm-w">Cadence + survey dropdowns</span></div>
+<div class="rm-t"><button class="rm-r med" style="left:62.45%;width:37.55%" data-prio="med" onclick="oi('o2')" aria-label="Notifications system, October 1 to December 31">10/1 → 12/31</button></div>
+<div class="rm-l">UWorks · AWorks · P360 basics<span class="rm-w">Initial tier builds</span></div>
+<div class="rm-t"><button class="rm-r med" style="left:62.45%;width:37.55%" data-prio="med" onclick="oi('o3')" aria-label="UWorks AWorks P360 basics, October 1 to December 31">10/1 → 12/31</button></div>
+<div class="rm-l">Future planning — tiers scoped (Core · Unicorn · Amp · P360)<span class="rm-w">⊞ all tiers scoped by 9/30</span></div>
+<div class="rm-t"><button class="rm-r med" style="left:37.55%;width:24.90%" data-prio="med" onclick="oi('o4')" aria-label="Future planning tiers scoped, August 1 to September 30">8/1 → 9/30</button></div>
+<div class="rm-l">Future planning — all tiers planned + Axis/Vector ↗<span class="rm-w">↓↑ planned · ↗ planned</span></div>
+<div class="rm-t"><button class="rm-r med" style="left:62.45%;width:37.55%" data-prio="med" onclick="oi('o5')" aria-label="Future planning all tiers planned, October 1 to December 31">10/1 → 12/31</button></div>
+<div class="rm-ml">Milestones</div>
+<div class="rm-mt">
+<button class="rm-m" style="left:24.9%;background:none;border:none;font:inherit;color:inherit" onclick="oi('m1')" aria-label="EA Go-Live milestone, June 30"><span class="rm-md"></span><span class="rm-mc"><b>EA go-live</b>6/30</span></button>
+<button class="rm-m" style="left:62.45%;background:none;border:none;font:inherit;color:inherit" onclick="oi('m2')" aria-label="GA Go-Live milestone, September 30"><span class="rm-md"></span><span class="rm-mc"><b>GA go-live</b>9/30</span></button>
+<button class="rm-m" style="left:99%;background:none;border:none;font:inherit;color:inherit" onclick="oi('m3')" aria-label="Polish and plan milestone, December 31"><span class="rm-md"></span><span class="rm-mc"><b>Polish + plan</b>12/31</span></button>
+</div>
+</div>
+</div></div>
+<footer class="page-foot">
+<div><strong>Wavelength platform roadmap</strong> · May–Dec 2026 · 23 workstreams across 5 lanes · 3 milestone go-lives</div>
+<div>theapexos.com</div>
+</footer>
+</div>
+<div class="mo" id="modal" onclick="cm(event,true)" role="dialog" aria-modal="true" aria-labelledby="mo-t">
+<div class="mo-c" onclick="event.stopPropagation()">
+<div class="mo-h">
+<h2 class="mo-t" id="mo-t"></h2>
+<button class="mo-x" onclick="cm()" aria-label="Close detail">×</button>
+</div>
+<div class="mo-meta">
+<span class="mo-pr" id="mo-pr"></span>
+<span class="mo-dates" id="mo-dates"></span>
+<span class="mo-wav" id="mo-wav"></span>
+<span class="mo-lane" id="mo-lane"></span>
+</div>
+<div class="mo-body" id="mo-b"></div>
+</div>
+</div>
+<script>
+const items = {
+  a1: { lane: "A360 Assessment", title: "Cleanup, Roger wiring, Arbiter rename, prev. refiners", priority: "high", dates: "May 22 → June 30, 2026", wav: "WAV-606 · 355–357 · misc", body: "Address open items: prompt cleanup and misaligned output, wire Roger into all assessment output fields (discussed several weeks ago), rename A5 (formerly C5) Calibrator to Arbiter (WAV-606) — the rationale being to reduce collision with the Calibrate activity in ARC-EQ. Complete previously scoped refiners WAV-355, 356, 357 (may be stale after sitting; first three already scored and wired in the Assessment Algorithms Live spreadsheet). The WAV-XXX placeholders for prompts and Roger output-wiring need real ticket numbers before they're trackable." },
+  a2: { lane: "A360 Assessment", title: "New refiners: Z5 · D5 · E5+E5x", priority: "crit", dates: "May 25 → June 30, 2026", wav: "Social energy · drives · routing", body: "Three refiners deferred to this window. Z5 is crucial — it's the first real read on Social Energy dynamics. D5 is helpful and provides a clearer Drives signal. E5+E5x is necessary for clear directional diagnostics — it covers Stimulus Routing and Emotional Gravity together. Done by 6/30 means each refiner is built, scored, wired, and producing output aligned with the cleanup work happening in parallel." },
+  a3: { lane: "A360 Assessment", title: "Refiners: Q5 · V5 · H5", priority: "crit", dates: "July 1 → September 30, 2026", wav: "WAV-288 · 326 · 346 · 417 · 444 · 465 · 466", body: "Second batch of refiners. Q5 is the Calibration refiner and is necessary for App full functionality — without it the You View loop is incomplete. V5 brings Team/Crew specificity. H5 contributes additional directional diagnostics. Q5 ties into the ARC-EQ Calibrate activity, so this work has a real dependency on Response Field progress and on Z5/D5/E5 from the EA window." },
+  a4: { lane: "A360 Assessment", title: "Assessment retake versioning", priority: "high", dates: "May 25 → September 30, 2026", wav: "Master file + pinned preferred lens", body: "Up to five retakes per level (Check, Map, etc.). The system generates a master file averaging all takes. The user pins their preferred operating lens. All calculation happens on the master (average) file, but output is delivered through the preferred lens. Example: if pinned Prime Stance is Navigator but the real (averaged) Prime is Anchor, the output reads as 'As a Navigator with strong Anchor influences, you…' — leading with Nav and grounding in Anc." },
+  a5: { lane: "A360 Assessment", title: "Editable categories + structural refinement", priority: "med", dates: "July 1 → September 30, 2026", wav: "PM/Architect signoff workflow", body: "Make all categories, codes, and formulae editable by Charlie. Push to production requires PM and/or Architect signoff (a real workflow, not just a label). A necessary but not quick lift. Pairs with assessment structural refinement, scoped after EA learnings come in." },
+  y1: { lane: "You View", title: "You View app — Base · Ops · Specs · Aims · Source", priority: "crit", dates: "May 25 → June 30, 2026", wav: "WAV-288 · 326 · 465 · 466", body: "App foundation building on Casey's sketch. Base section: rate energy (depleted ↔ resourced) and rate activation (reserved ↔ expressed) as two separate sliders — they're different valences and not on the same axis. Confirm or define the task. Sync orientation without naming the stance — use colloquial framing (exploratory, social, get-stuff-done). Get advice from Roger on how to align. Ops, Specs, Aims, Source are expandable sections drawing from CoreCheck_AlfaNav_Bridge_Map." },
+  y2: { lane: "You View", title: "Response Field (formerly ARC-EQ)", priority: "high", dates: "July 1 → December 31, 2026", wav: "WAV-416 · 417 · 444", body: "Rename from ARC-EQ to Response Field — echoes the EQ → NQ shift in the field (broader cognitive + emotional resources, not just emotion). Process: Notice-Name-Attune-Route-Calibrate, with Q5 doing the Calibration. Education: E5x Emotional Gravity (Sensemaking, Working, Social Standing, Boundaries, Significance — where attention is drawn) and E5 Stimulus Routing (Baseline-Sensitivity-Reactivity-Inertia — how stimuli get routed). Gating is primary: IMP-React-Respond-Restore mapped to System 1 / System 2 plus an Offramp." },
+  y3: { lane: "You View", title: "My Wavelength: The Clear Signal", priority: "med", dates: "October 1 → December 31, 2026", wav: "WAV-605 · Aims capstone", body: "Folded into and made capstone of the Aims section in You View. Draws from existing data plus more developed content surfaced through this window." },
+  y4: { lane: "You View", title: "You View desktop — enhanced insights", priority: "high", dates: "October 1 → December 31, 2026", wav: "WAV-418 · 273 · 454 · 362", body: "Desktop expansion of You View. WAV-418: depth and flexibility highlights, 'superpowers' with watchouts, all delivered through Use-Improve-Protect — concentration within Stance family especially with high deltas to other stances, low barriers between stances (dyad/triad/quadrat/pentad options), concentration within facet. WAV-273: Raw, Relative, and Potential scores in a rotating panel for individual and team lenses. WAV-454: 'Peak' added to cross-domain mapping as a Turbo icon alongside Energy (Fuel) and Drive (Horsepower) — what you can do in a sprint with prep + recovery. WAV-362: gauges on Energetic Stances and full range of all 25 with U-I-P per stance." },
+  c1: { lane: "Crew View", title: "Team member crew view (app)", priority: "high", dates: "May 25 → June 30, 2026", wav: "Refines click-on-individual · WAV-412 tie-in", body: "Refinement of the current click-on-individual view wired into Crew View. Layout: avatar or uploaded photo plus name on the left. To the right: Roger chat field, team message board, Team icons + Team Pulse info (Stress Signals tie-in WAV-412), quick link to last-used Amplifier or Response Field training. Below avatar/name: Prime icon with Energetic Stance · Energetic Signature (e.g. Navigator · Discoverer), Shift slightly smaller, Pivot slightly smaller. Then horizontally: brief synthesis box (three lines visible, expandable, Roger icon for feedback). Then Response Field info row — current state, Shift Load (Work Signal:Shift Index, WAV-451), range, drift suggestions/watchouts, callout for ARC-EQ aspects to use. Then Execution Rhythm gauges. Then Social Energy gauges. Then top suggested + four Amplifiers / Response Field in-process (syncs with app and vice versa). Then all ten Operating Signals with Initiate / Integrate toggle." },
+  c2: { lane: "Crew View", title: "Crew desktop EA — team lead foundation", priority: "crit", dates: "May 1 → June 15, 2026", wav: "WAV-284 · 288 · 410 · 411 · 465 · 466", body: "Team Lead edition for Early Access. Wire into live team member scores. Updated gauges (WAV-465/466). The big deal: the vast majority of this is pulling in existing data and gauges for individuals, providing simple averages for the group, and adding sorts. Execution Rhythm (WAV-410, 411): each person listed in the leftmost column with Initiate / Coordinate / Integrate / Modulate / Punctuate gauges left to right, hovers on each header explaining the phase, plus Aggregate / Expressed / Reserved for the team in each area at the top — focusing the Team Lead on team characteristics first. Sortable by person. Energetic Stance: keep the heat chart approach for coverage, add hovers with KB definitions for each Nav/Anc/Cat/Sen/Sag and each phase, add Prime/Shift/Pivot drill-in on individual initials, subsidiary heat charts for Shift and Pivot, aggregate heat chart with sized icons. Social Energy: rework to follow ETS / BPS / EBA (change S→C for charge) / EFS / EPS; keep bars for EBA hover only; lead with GAP; Glance gauges ideal. Operating Signals: sortable by person with gauges, keep Initiate / Integrate toggle, Aggregate / Expressed / Reserved on top." },
+  c3: { lane: "Crew View", title: "Team groupings + crew read", priority: "high", dates: "June 1 → June 30, 2026", wav: "WAV-346 · 607", body: "Team Groupings Option (WAV-346) with clarified permissions — Charlie has full access to all for now; others can only view Wavelength. Each team config saved and comparable based on aggregates and averages across domains, including CrewArcs. Crew Read (WAV-607) placeholder pending Charlie completion: sortable by person with gauges, team Aggregate / Expressed / Reserved on top." },
+  c4: { lane: "Crew View", title: "CrewArcs — Clarity · Competence · Cohesion · Coordination · Candor", priority: "high", dates: "July 1 → September 30, 2026", wav: "Team-level proto-Prismatics X5s", body: "Crew Architecture — five team-level proto-Prismatics X5s. Clarity = Narrative Coherence + Compelling Direction. Competence = Capability Activation + Strong Structure. Cohesion = Practice Vitality + Supportive Context. Coordination = Strategic Pivot Velocity + Collective Cognition. Candor = Reality Recognition + Mutual Trust. Each comes with: overall selected crew gauge plus available individual view, composite and individual score (simple derivations), Development or TURBO gauge showing boost view for potential gains and actual progress. Most of this is simple linking or averaging of existing data from team members — same pie, different slicing." },
+  c5: { lane: "Crew View", title: "Crew desktop GA — full lead + CHRO + applicant", priority: "high", dates: "July 1 → September 30, 2026", wav: "WAV-451 · Lou Adler ranking", body: "Purpose Alignment extension of Clarity: measures whether the team's natural drives match the work asked of them and whether they have capacity to close the gap. Inputs: Team Lead's Shared Direction Statement translated into D5 language; Drive Epicenter (5) and Purpose Anchor (25) specificity at team aggregate top/second and individual drilldown; gauges and Social Energy-like output. Team Grouping Ratings: basic analysis of expected crew performance via Roger clarifying questions on team purpose and task structure. Drive alignment inference. Shift Load (WAV-451): Work Signal:Shift Index updates on individuals and team. CHRO / Job Applicant view using Lou Adler principles for resume ranking — both without A360 (speculative ranking plus translation engines for other assessments) and with A360 (core categories, then post-Stance-shift Prime→Shift and Shift→Pivot based on durability projections plus Amplifier development and deployment)." },
+  c6: { lane: "Crew View", title: "Plain language + own/dyad/small team pulses", priority: "med", dates: "July 1 → September 30, 2026", wav: "Self-selectable crew", body: "Own and dyad/small team views and pulses — the individual sets their cross-functional crew distinct from the formal team config. Cross-cutting collaborators often matter more than the formal team for day-to-day work, so this surfaces what's actually happening in the group people work with. Plus plain-language surfacing of stance / orienting / framing and Use-Improve-Protect in Crew View." },
+  l1: { lane: "Launch View", title: "Amplifier module + UIP landing", priority: "high", dates: "May 25 → June 30, 2026", wav: "WAV-365 · 603", body: "Launch View EA basics. Amplifier module illustration (WAV-365, 603) with scores wired into the actual assessment for individuals (pitching gauges). Provide base info on each amplifier from knowledge-base documents — at least enough that clicking shows what each is. Use-Improve-Protect landing so people see additional resources beyond the assessment output. Aim is a landing page for the links in UIP — not the full module, just enough to demonstrate that we're not just telling people what to do, we're giving them the resources." },
+  l2: { lane: "Launch View", title: "Five amplifier epicenters + training", priority: "high", dates: "July 1 → September 30, 2026", wav: "WAV-603 · A360 Pro · 3 levels deep", body: "The five Amplifier Epicenters and training ship with A360 Pro up to three levels deep (WAV-603). Epicenter level (Framer, Tactician, Beacon, etc.) plus the module level beneath (TAC-1, BEA-4, etc.). Each amplifier ties into Use-Improve-Protect via specific connections: an associated Energetic Stance for Use (get your orientation right), the amplifier itself for Improve (skill development), and the Response Field for Protect (intentional evaluation and deployment). Scoring is already coded to support these links." },
+  l3: { lane: "Launch View", title: "UIP wiring + relativized scores", priority: "high", dates: "October 1 → December 31, 2026", wav: "WAV-273 · every gauge linked", body: "Use-Improve-Protect wired into every gauge — including the to-be-surfaced Stance gauges. Links in every one for supporting modules. Use: Stance Alignment plus Response Field. Improve: Dev plus Response Field. Protect: Range/Drift plus Response Field. Plus WAV-273 Raw, Relative, and Potential scores in the rotating panel for individual and team lenses." },
+  o1: { lane: "Other", title: "Quick surveys for outreach + speaking", priority: "med", dates: "July 1 → July 15, 2026", wav: "10-question briefs · v0.3 stance", body: "Quick surveys for outreach and speaking — 10-question briefs in the same format and iconography as the Drives refiners. Five questions on Stance, five on Phase, predicting all 25 plus Execution Rhythm. Consider current stance v0.3 draft for Stance and Work Shift; potentially augment v0.3 for Social Charge and Execution Rhythm." },
+  o2: { lane: "Other", title: "Notifications system", priority: "med", dates: "October 1 → December 31, 2026", wav: "Cadence + survey dropdowns", body: "Standard cadence-based notifications on the app interface — set at whatever cadence works best. Alongside each notification, a + or prompt for a dropdown surfacing: Work Shift weekly survey questions (compares current work-slider input to baseline from the assessment, ideally averaged over five takes plus Roger calibrations), unfinished refiner questions (if the user just did QQs between tiers), and Amplifier questions at the epicenter level (Tactician, Beacon, etc. — not TAC-1, BEA-4, those live in Launch View)." },
+  o3: { lane: "Other", title: "UWorks · AWorks · P360 basics", priority: "med", dates: "October 1 → December 31, 2026", wav: "Initial tier builds", body: "Initial tier builds for UWorks (Unicorn-themed), AWorks (Amplifier-themed), and P360 (Performance 360). Paired with Use-Improve-Protect wiring across every gauge." },
+  o4: { lane: "Other", title: "Future planning — tiers scoped", priority: "med", dates: "August 1 → September 30, 2026", wav: "⊞ all tiers scoped", body: "Scoping work for the next layer. A360 Core ⊞ all tiers scoped. Unicorn ⊞ all tiers scoped. Amp ⊞ all tiers scoped. P360 ⊞ all tiers scoped. Plus the Mission, Culture, Resonance, and Signal series at the same scoping level. 'Scoped' here means specs and structure are defined and ready for the planning push that follows in Q4." },
+  o5: { lane: "Other", title: "Future planning — all tiers planned + Axis/Vector ↗", priority: "med", dates: "October 1 → December 31, 2026", wav: "↓↑ planned · ↗ planned", body: "The Q4 planning push that sets up 2027. A360 Core, Unicorn, Amp, and P360 each get ↓↑ all-tiers planned. Plus A360 Axis ↗, UWorks Vector ↗, AWorks Amp ↗, P360 ↗ all planned. Mission, Culture, Resonance, Signal series at ↓↑ level. Impact, Apex, Cadence, Radar series at ↗ level. 'Planned' is deeper than 'scoped' — it includes sequencing, dependencies, and the rough resourcing required for the 2027 build window." },
+  m1: { lane: "Milestone", title: "EA go-live · 6/30", priority: "crit", dates: "June 30, 2026", wav: "Early Access launch", body: "Early Access go-live. What needs to be ready: A360 cleanup including Roger output-wiring (the load-bearing dependency for every view), Z5/D5/E5+E5x refiners, You View app foundation, Team Member Crew View in app, Crew Desktop EA Team Lead foundation, Team Groupings + Crew Read placeholder, Launch View Amplifier module + UIP landing, and the previously scoped refiners (WAV-355/356/357). Most everything between 5/25 and 6/30 in the timeline ladders into this gate." },
+  m2: { lane: "Milestone", title: "GA go-live · 9/30", priority: "crit", dates: "September 30, 2026", wav: "General Access launch", body: "General Access go-live. What needs to be ready: Q5 / V5 / H5 refiners (Q5 is the gate to App full functionality), assessment retake versioning, editable categories + structural refinement, CrewArcs (5), Crew Desktop GA including the CHRO and Job Applicant view, Plain Language + small team pulses, Five Amplifier Epicenters + training at A360 Pro three levels, Quick Surveys (ships ahead by 7/15), and tier scoping for Core / Unicorn / Amp / P360. The 9/30 gate is denser than 6/30 — more parallel workstreams, more dependencies between them." },
+  m3: { lane: "Milestone", title: "Polish + plan · 12/31", priority: "crit", dates: "December 31, 2026", wav: "Polish complete · 2027 setup", body: "Polish complete plus Future Planning foundation. What needs to be ready: Response Field (Notice-Name-Attune-Route-Calibrate complete with E5x and gating), My Wavelength Clear Signal, You View desktop with enhanced insights, UIP wiring across every gauge plus relativized scores, notifications system, UWorks / AWorks / P360 basics, and all tiers planned (↓↑) plus the Axis / Vector / Amp ↗ planning. The 12/31 push is less about new features and more about closing UIP loops, surfacing the right gauges in the right places, and lining up clean inputs for the 2027 build window." }
+};
+function oi(id) {
+  const it = items[id]; if (!it) return;
+  document.getElementById('mo-t').textContent = it.title;
+  const pr = document.getElementById('mo-pr');
+  pr.className = 'mo-pr ' + it.priority;
+  pr.textContent = it.priority === 'crit' ? 'Critical' : it.priority === 'high' ? 'High' : 'Medium';
+  document.getElementById('mo-dates').textContent = it.dates;
+  document.getElementById('mo-wav').textContent = it.wav;
+  document.getElementById('mo-lane').textContent = '· ' + it.lane;
+  document.getElementById('mo-b').textContent = it.body;
+  document.getElementById('modal').classList.add('open');
+}
+function cm(e, fromOverlay) {
+  if (fromOverlay && e && e.target.id !== 'modal') return;
+  document.getElementById('modal').classList.remove('open');
+}
+function rmTP(p, el) {
+  el.classList.toggle('off');
+  const h = el.classList.contains('off');
+  document.querySelectorAll('.rm-r[data-prio="' + p + '"]').forEach(b => {
+    if (h) b.classList.add('hd'); else b.classList.remove('hd');
+  });
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cm(); });
+</script>
+</body>
+</html>

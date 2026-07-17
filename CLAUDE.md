@@ -2,7 +2,24 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Scope and ownership — read this first
+
+This repo hosts **several unrelated static projects** that happen to share one GitHub Pages site. Read the section that matches what you were asked to change; do not assume a request is about the game just because the game is documented at length below.
+
+- `waveroad05/` — the **Wavelength platform roadmap**. Kelby (`ksherer-Fluent`) maintains this. It has **its own `CLAUDE.md`** at `waveroad05/CLAUDE.md` — that file governs all work in that directory. Roadmap content lives in `waveroad05/data.js`, never in markup.
+- Everything else — `CNAME`, `v1.html`, `v2.html`, `index.html`, `README.md` — is **outside that lane**.
+
+**If a session needs to touch anything outside `waveroad05/`, stop and confirm with Charlie before making changes.**
+
+`CNAME` is the most fragile file here. It contains `apps.theapexos.com` and is what makes GitHub Pages serve this repo at that domain. Editing or deleting it breaks every URL on the domain at once, `waveroad05/` included. Do not touch it.
+
+`main` is protected against force-pushes and branch deletion. Ordinary commits are fine, and are revertible — that is the point. Never work around the protection; if a change seems to require rewriting history, stop and ask.
+
+This repo is **public**. Do not add anything here that shouldn't be world-readable.
+
 ## What this is
+
+The sections below describe **the game only** (`index.html`, `v1.html`, `v2.html`). They do not apply to `waveroad05/`.
 
 A behavioral-economics browser game with two parallel editions, each shipped as a single self-contained HTML file. No build step, no dependencies, no package manager. Each file has inline `<style>` and `<script>` and runs by double-clicking it or hitting the deployed URL.
 

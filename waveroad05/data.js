@@ -1,12 +1,33 @@
 // =========================================================================
 // Wavelength platform roadmap — data source
 // =========================================================================
-// This file is the source of truth for everything that appears on the
-// roadmap page. Editing here, committing, and pushing to main is all that's
-// needed to update apps.theapexos.com/waveroad05/.
+// Generated 2026-08-11. Restructured to a GA-minimum scope with a separate
+// stretch layer for deferred work (see notes below).
+// This restructures the roadmap around a GA-minimum scope: each lane shows
+// a reduced near-term slice needed for GA, plus a separate "stretch" bar
+// for work that continues past GA rather than gating it.
 //
-// See CLAUDE.md (in this folder) for the schema reference and step-by-step
-// examples for every common change.
+// METHODOLOGY, DOCUMENTED (read before trusting any specific date):
+// - No Linear ticket carries a real time Estimate. Hours below are a rough
+//   proxy: High priority ~8h, Medium ~5h, Low ~3h, No-priority ~4h, with
+//   manual overrides for tickets known (from the seam-wiring review) to be
+//   P1 unlocks or already near-complete, regardless of their Linear priority.
+// - Capacity assumed: 15 hrs/week per developer (Rick + Trenton), 30
+//   combined, minus a continuous background draw for Platform/Admin's
+//   GA-minimum slice and for Enterprise Account/Team (kept running per
+//   this roadmap). Net ~25 effective hrs/week for phase-specific work.
+// - One week of buffer has been added ahead of the GA-minimum milestone.
+// - Mobile App has NO Linear tickets today. Its GA-minimum bar (40h) and
+//   stretch bar (16h) are a placeholder assumption — a working prototype
+//   (S&A Marketing) needs a gap-assessment plus wiring to the same A360
+//   output You/Base consumes. Treat as provisional until scoped for real.
+// - Launch View has essentially no dev-sized tickets yet (WAV-795 is a
+//   still-childless umbrella). Its bar is a placeholder for "get scoped,"
+//   not a real estimate.
+// - This whole file should be treated as a first-pass draft, not final
+//   until Charlie, Rick, and Trenton have reviewed the underlying estimates.
+//
+// See CLAUDE.md (in this folder) for the schema reference.
 // =========================================================================
 
 window.ROADMAP_DATA = {
@@ -14,324 +35,217 @@ window.ROADMAP_DATA = {
   // --- Page chrome ---------------------------------------------------------
   meta: {
     title: "Wavelength platform roadmap",
-    pageTitle: "Wavelength Platform Roadmap — May–Dec 2026",
+    pageTitle: "Wavelength Platform Roadmap — May 2026 – Jan 2027 (DRAFT)",
     eyebrow: "Internal · waveroad05",
-    subtitle: "May 2026 → December 2026, organized into five workstream lanes (A360 Assessment, You View, Crew View, Launch View, Other) and gated by three milestones — EA Go-Live on 6/30, GA Go-Live on 9/30, and Polish + Future Planning on 12/31. Click any bar for workstream detail. Filter chips below scope the view by priority.",
-    lastUpdated: "May 25, 2026",
-    footerLeft: "May–Dec 2026 · 23 workstreams across 5 lanes · 3 milestone go-lives",
+    subtitle: "May 2026 → January 2027, organized into eight lanes (Assessment, Crew View, UIP, You/Base View, Mobile App, Stance Alignment, Launch View, Platform/Admin) plus a separate Enterprise Account/Team track. GA-minimum scope targets 11/7. Bars marked 'stretch' are deferred work that continues past GA rather than gating it. Every date here is a first-pass estimate built from ticket-count proxies, not confirmed developer LOE — see the notes at the top of data.js before treating any date as committed.",
+    lastUpdated: "August 11, 2026",
+    footerLeft: "May 2026–Jan 2027 · 8 lanes + 1 concurrent track · GA-minimum target 11/7",
     footerRight: "theapexos.com"
   },
 
   // --- Timeline range ------------------------------------------------------
-  // The roadmap spans these dates inclusive. Extend `end` to grow the timeline.
   timeline: {
     start: "2026-05-01",
-    end:   "2026-12-31"
+    end:   "2027-01-31"
   },
 
   // --- Phases --------------------------------------------------------------
-  // Background shading bands across the timeline.
-  // id must be one of: ea | ga | po (these are styled in index.html CSS).
-  // Adding a new phase id requires adding matching CSS rules.
   phases: [
     { id: "ea", label: "EA",             start: "2026-05-01", end: "2026-06-30" },
-    { id: "ga", label: "GA",             start: "2026-07-01", end: "2026-09-30" },
-    { id: "po", label: "Polish & plan",  start: "2026-10-01", end: "2026-12-31" }
+    { id: "ga", label: "GA (minimum)",   start: "2026-07-01", end: "2026-11-07" },
+    { id: "po", label: "Polish & Launch View", start: "2026-11-08", end: "2027-01-31" }
   ],
 
-  // --- Lanes (rows are grouped by lane) -----------------------------------
-  // icon = any Tabler icon class. Browse at https://tabler.io/icons
+  // --- Lanes ----------------------------------------------------------------
   lanes: [
-    { id: "a360",   name: "A360 assessment · foundation",          icon: "ti-clipboard-data", tag: "Lane 01" },
-    { id: "you",    name: "You view · individual experience",      icon: "ti-user",           tag: "Lane 02" },
-    { id: "crew",   name: "Crew view · team lead experience",      icon: "ti-users",          tag: "Lane 03" },
-    { id: "launch", name: "Launch view · amplifiers & growth",     icon: "ti-rocket",         tag: "Lane 04" },
-    { id: "other",  name: "Other · cross-cutting & future planning", icon: "ti-stack-2",      tag: "Lane 05" }
+    { id: "a360",       name: "A360 assessment · refiners & scoring",         icon: "ti-clipboard-data", tag: "Lane 01" },
+    { id: "crew",       name: "Crew view · team lead experience",             icon: "ti-users",          tag: "Lane 02" },
+    { id: "uip",        name: "Use / Improve / Protect · copy & link layer", icon: "ti-link",           tag: "Lane 03" },
+    { id: "you",        name: "You / Base view · individual experience",     icon: "ti-user",           tag: "Lane 04" },
+    { id: "mobile",     name: "Mobile app · prototype wiring",               icon: "ti-device-mobile",  tag: "Lane 05" },
+    { id: "stance",     name: "Stance alignment · live scoring engine",      icon: "ti-compass",        tag: "Lane 06" },
+    { id: "launch",     name: "Launch view · amplifiers & growth",           icon: "ti-rocket",         tag: "Lane 07" },
+    { id: "platform",   name: "Platform / admin · cross-cutting infra",      icon: "ti-stack-2",        tag: "Lane 08" },
+    { id: "enterprise", name: "Enterprise account/team · concurrent track",  icon: "ti-building",       tag: "Concurrent" }
   ],
 
   // --- Items (the bars) ----------------------------------------------------
-  // priority must be one of: crit | high | med
-  // lane must match an id from the lanes array above.
-  // Items appear in the order they're listed here, grouped by lane.
   items: [
 
-    // --- A360 ASSESSMENT --------------------------------------------------
+    // --- A360 ASSESSMENT ----------------------------------------------------
     {
-      id: "a1",
-      lane: "a360",
-      title: "Cleanup, Roger wiring, Arbiter rename, prev. refiners",
-      wavShort: "WAV-606 · 355–357 · misc",
-      priority: "high",
-      start: "2026-05-22",
-      end:   "2026-06-30",
-      detail: "Address open items: prompt cleanup and misaligned output, wire Roger into all assessment output fields (discussed several weeks ago), rename A5 (formerly C5) Calibrator to Arbiter (WAV-606) — the rationale being to reduce collision with the Calibrate activity in ARC-EQ. Complete previously scoped refiners WAV-355, 356, 357 (may be stale after sitting; first three already scored and wired in the Assessment Algorithms Live spreadsheet). The WAV-XXX placeholders for prompts and Roger output-wiring need real ticket numbers before they're trackable."
-    },
-    {
-      id: "a2",
-      lane: "a360",
-      title: "New refiners: Z5 · D5 · E5+E5x",
-      wavShort: "Social energy · drives · routing",
+      id: "a1", lane: "a360",
+      title: "Z5s Social Energy refiner — do next (Charlie-reprioritized 8/11)",
+      wavShort: "WAV-837",
       priority: "crit",
-      start: "2026-05-25",
-      end:   "2026-06-30",
-      detail: "Three refiners deferred to this window. Z5 is crucial — it's the first real read on Social Energy dynamics. D5 is helpful and provides a clearer Drives signal. E5+E5x is necessary for clear directional diagnostics — it covers Stimulus Routing and Emotional Gravity together. Done by 6/30 means each refiner is built, scored, wired, and producing output aligned with the cleanup work happening in parallel."
+      start: "2026-08-11", end: "2026-08-21",
+      detail: "GA-minimum, immediate. Carved out of WAV-355 on 8/11 and reprioritized High relative to all other refiners, per Charlie. First Assessment item on the schedule. ~8 hrs at the priority-heuristic rate."
     },
     {
-      id: "a3",
-      lane: "a360",
-      title: "Refiners: Q5 · V5 · H5",
-      wavShort: "WAV-288 · 326 · 346 · 417 · 444 · 465 · 466",
+      id: "a1b", lane: "a360",
+      title: "Post-assessment landing/credibility page",
+      wavShort: "WAV-696",
       priority: "crit",
-      start: "2026-07-01",
-      end:   "2026-09-30",
-      detail: "Second batch of refiners. Q5 is the Calibration refiner and is necessary for App full functionality — without it the You View loop is incomplete. V5 brings Team/Crew specificity. H5 contributes additional directional diagnostics. Q5 ties into the ARC-EQ Calibrate activity, so this work has a real dependency on Response Field progress and on Z5/D5/E5 from the EA window."
+      start: "2026-08-11", end: "2026-10-17",
+      detail: "GA-minimum. Already In Progress. Landing page between assessment completion and results, using canonical copy from wavelength_positioning.md. ~8 hrs at the priority-heuristic rate."
     },
     {
-      id: "a4",
-      lane: "a360",
-      title: "Assessment retake versioning",
-      wavShort: "Master file + pinned preferred lens",
-      priority: "high",
-      start: "2026-05-25",
-      end:   "2026-09-30",
-      detail: "Up to five retakes per level (Check, Map, etc.). The system generates a master file averaging all takes. The user pins their preferred operating lens. All calculation happens on the master (average) file, but output is delivered through the preferred lens. Example: if pinned Prime Stance is Navigator but the real (averaged) Prime is Anchor, the output reads as 'As a Navigator with strong Anchor influences, you…' — leading with Nav and grounding in Anc."
-    },
-    {
-      id: "a5",
-      lane: "a360",
-      title: "Editable categories + structural refinement",
-      wavShort: "PM/Architect signoff workflow",
+      id: "a2", lane: "a360",
+      title: "D5 / E5 / E5x / Q5 / V5 refiners — deprioritized 8/11, plus remaining backlog",
+      wavShort: "WAV-355 · 356 · 357 · 34 other WS: Assessment tickets",
       priority: "med",
-      start: "2026-07-01",
-      end:   "2026-09-30",
-      detail: "Make all categories, codes, and formulae editable by Charlie. Push to production requires PM and/or Architect signoff (a real workflow, not just a label). A necessary but not quick lift. Pairs with assessment structural refinement, scoped after EA learnings come in."
+      start: "2026-08-11", end: "2027-01-31",
+      detail: "Stretch. WAV-355/356/357 were deprioritized to Low on 8/11 to concentrate resources on Z5s (WAV-837) — Charlie's direction. Worth a direct flag: D5 was previously identified as feeding the Clarity CrewArc composite (WAV-767/Seam S-2), and Q5 was called out on the prior roadmap as the gate to full App functionality. Deprioritizing this group may have downstream effects on those dependencies that are worth confirming were considered. Also includes the remaining ~34 open WS: Assessment tickets not required to gate GA-minimum. ~143 hrs total, not sequenced against a specific date."
     },
 
-    // --- YOU VIEW ---------------------------------------------------------
+    // --- CREW VIEW -----------------------------------------------------------
     {
-      id: "y1",
-      lane: "you",
-      title: "You View app — Base · Ops · Specs · Aims · Source",
-      wavShort: "WAV-288 · 326 · 465 · 466",
+      id: "c1", lane: "crew",
+      title: "Wire Crew View to real A360 output — the P1 unlock",
+      wavShort: "WAV-663·664·767·809-812·814",
       priority: "crit",
-      start: "2026-05-25",
-      end:   "2026-06-30",
-      detail: "App foundation building on Casey's sketch. Base section: rate energy (depleted ↔ resourced) and rate activation (reserved ↔ expressed) as two separate sliders — they're different valences and not on the same axis. Confirm or define the task. Sync orientation without naming the stance — use colloquial framing (exploratory, social, get-stuff-done). Get advice from Roger on how to align. Ops, Specs, Aims, Source are expandable sections drawing from CoreCheck_AlfaNav_Bridge_Map."
+      start: "2026-08-11", end: "2026-10-17",
+      detail: "GA-minimum. Seams S-1 (WAV-809), S-2 (WAV-767), S-3 (WAV-810), S-6/S-7 (WAV-811), S-8 (WAV-812), plus already-shipped-or-in-flight S-4/S-9 wiring (WAV-663, 664, 665). 'Everything reads off real scores' — the brief's own framing. ~94 hrs."
     },
     {
-      id: "y2",
-      lane: "you",
-      title: "Response Field (ARC-EQ) — NNARC + E5x + gating",
-      wavShort: "WAV-416 · 417 · 444",
+      id: "c2", lane: "crew",
+      title: "Remaining Crew View seams — S-10, S-11, The Bar, Coach pathway",
+      wavShort: "WAV-813 · 814 · 815",
       priority: "high",
-      start: "2026-07-01",
-      end:   "2026-12-31",
-      detail: "Rename from ARC-EQ to Response Field — echoes the EQ → NQ shift in the field (broader cognitive + emotional resources, not just emotion). Process: Notice-Name-Attune-Route-Calibrate, with Q5 doing the Calibration. Education: E5x Emotional Gravity (Sensemaking, Working, Social Standing, Boundaries, Significance — where attention is drawn) and E5 Stimulus Routing (Baseline-Sensitivity-Reactivity-Inertia — how stimuli get routed). Gating is primary: IMP-React-Respond-Restore mapped to System 1 / System 2 plus an Offramp."
-    },
-    {
-      id: "y3",
-      lane: "you",
-      title: "My Wavelength: The Clear Signal",
-      wavShort: "WAV-605 · Aims capstone",
-      priority: "med",
-      start: "2026-10-01",
-      end:   "2026-12-31",
-      detail: "Folded into and made capstone of the Aims section in You View. Draws from existing data plus more developed content surfaced through this window."
-    },
-    {
-      id: "y4",
-      lane: "you",
-      title: "You View desktop — enhanced insights",
-      wavShort: "WAV-418 · 273 · 454 · 362",
-      priority: "high",
-      start: "2026-10-01",
-      end:   "2026-12-31",
-      detail: "Desktop expansion of You View. WAV-418: depth and flexibility highlights, 'superpowers' with watchouts, all delivered through Use-Improve-Protect — concentration within Stance family especially with high deltas to other stances, low barriers between stances (dyad/triad/quadrat/pentad options), concentration within facet. WAV-273: Raw, Relative, and Potential scores in a rotating panel for individual and team lenses. WAV-454: 'Peak' added to cross-domain mapping as a Turbo icon alongside Energy (Fuel) and Drive (Horsepower) — what you can do in a sprint with prep + recovery. WAV-362: gauges on Energetic Stances and full range of all 25 with U-I-P per stance."
+      start: "2026-10-17", end: "2027-01-31",
+      detail: "Stretch. Leader designation, Roger production-endpoint composition read, and the Bar leader-verdict rule. The Coach pathway (Demo 2 scope) was deliberately not drafted — still pending reconciliation against WAV-769. ~31 hrs."
     },
 
-    // --- CREW VIEW --------------------------------------------------------
+    // --- UIP -------------------------------------------------------------
     {
-      id: "c1",
-      lane: "crew",
-      title: "Team member crew view (app)",
-      wavShort: "Refines click-on-individual · WAV-412 tie-in",
-      priority: "high",
-      start: "2026-05-25",
-      end:   "2026-06-30",
-      detail: "Refinement of the current click-on-individual view wired into Crew View. Layout: avatar or uploaded photo plus name on the left. To the right: Roger chat field, team message board, Team icons + Team Pulse info (Stress Signals tie-in WAV-412), quick link to last-used Amplifier or Response Field training. Below avatar/name: Prime icon with Energetic Stance · Energetic Signature (e.g. Navigator · Discoverer), Shift slightly smaller, Pivot slightly smaller. Then horizontally: brief synthesis box (three lines visible, expandable, Roger icon for feedback). Then Response Field info row — current state, Shift Load (Work Signal:Shift Index, WAV-451), range, drift suggestions/watchouts, callout for ARC-EQ aspects to use. Then Execution Rhythm gauges. Then Social Energy gauges. Then top suggested + four Amplifiers / Response Field in-process (syncs with app and vice versa). Then all ten Operating Signals with Initiate / Integrate toggle."
-    },
-    {
-      id: "c2",
-      lane: "crew",
-      title: "Crew desktop EA — team lead foundation",
-      wavShort: "WAV-284 · 288 · 410 · 411 · 465 · 466",
+      id: "u1", lane: "uip",
+      title: "UIP mechanical wiring — link columns, RAG fix, KB grounding",
+      wavShort: "WAV-796 · 801 · 802 (WAV-799 shipped 8/11)",
       priority: "crit",
-      start: "2026-05-01",
-      end:   "2026-06-15",
-      detail: "Team Lead edition for Early Access. Wire into live team member scores. Updated gauges (WAV-465/466). The big deal: the vast majority of this is pulling in existing data and gauges for individuals, providing simple averages for the group, and adding sorts. Execution Rhythm (WAV-410, 411): each person listed in the leftmost column with Initiate / Coordinate / Integrate / Modulate / Punctuate gauges left to right, hovers on each header explaining the phase, plus Aggregate / Expressed / Reserved for the team in each area at the top — focusing the Team Lead on team characteristics first. Sortable by person. Energetic Stance: keep the heat chart approach for coverage, add hovers with KB definitions for each Nav/Anc/Cat/Sen/Sag and each phase, add Prime/Shift/Pivot drill-in on individual initials, subsidiary heat charts for Shift and Pivot, aggregate heat chart with sized icons. Social Energy: rework to follow ETS / BPS / EBA (change S→C for charge) / EFS / EPS; keep bars for EBA hover only; lead with GAP; Glance gauges ideal. Operating Signals: sortable by person with gauges, keep Initiate / Integrate toggle, Aggregate / Expressed / Reserved on top."
+      start: "2026-08-11", end: "2026-10-17",
+      detail: "GA-minimum. Migration + populate + render (WAV-796), the gauge-specific RAG query fix now unblocked (WAV-801), and the KB_U5/KB_T5 sync (WAV-802). The per-gauge Use/Improve/Protect rollout (WAV-799) shipped 8/11 and is no longer part of the remaining estimate. ~84 hrs, down from ~92 — the ~8-hour reduction is banked as minor schedule margin rather than reflected in an earlier end date. Nearly all of UIP's open work is GA-critical; almost nothing here is stretch."
     },
     {
-      id: "c3",
-      lane: "crew",
-      title: "Team groupings + crew read",
-      wavShort: "WAV-346 · 607",
-      priority: "high",
-      start: "2026-06-01",
-      end:   "2026-06-30",
-      detail: "Team Groupings Option (WAV-346) with clarified permissions — Charlie has full access to all for now; others can only view Wavelength. Each team config saved and comparable based on aggregates and averages across domains, including CrewArcs. Crew Read (WAV-607) placeholder pending Charlie completion: sortable by person with gauges, team Aggregate / Expressed / Reserved on top."
-    },
-    {
-      id: "c4",
-      lane: "crew",
-      title: "CrewArcs (5): Clarity · Competence · Cohesion · Coordination · Candor",
-      wavShort: "Team-level proto-Prismatics X5s",
-      priority: "high",
-      start: "2026-07-01",
-      end:   "2026-09-30",
-      detail: "Crew Architecture — five team-level proto-Prismatics X5s. Clarity = Narrative Coherence + Compelling Direction. Competence = Capability Activation + Strong Structure. Cohesion = Practice Vitality + Supportive Context. Coordination = Strategic Pivot Velocity + Collective Cognition. Candor = Reality Recognition + Mutual Trust. Each comes with: overall selected crew gauge plus available individual view, composite and individual score (simple derivations), Development or TURBO gauge showing boost view for potential gains and actual progress. Most of this is simple linking or averaging of existing data from team members — same pie, different slicing."
-    },
-    {
-      id: "c5",
-      lane: "crew",
-      title: "Crew desktop GA — full lead + CHRO + applicant",
-      wavShort: "WAV-451 · Lou Adler ranking",
-      priority: "high",
-      start: "2026-07-01",
-      end:   "2026-09-30",
-      detail: "Purpose Alignment extension of Clarity: measures whether the team's natural drives match the work asked of them and whether they have capacity to close the gap. Inputs: Team Lead's Shared Direction Statement translated into D5 language; Drive Epicenter (5) and Purpose Anchor (25) specificity at team aggregate top/second and individual drilldown; gauges and Social Energy-like output. Team Grouping Ratings: basic analysis of expected crew performance via Roger clarifying questions on team purpose and task structure. Drive alignment inference. Shift Load (WAV-451): Work Signal:Shift Index updates on individuals and team. CHRO / Job Applicant view using Lou Adler principles for resume ranking — both without A360 (speculative ranking plus translation engines for other assessments) and with A360 (core categories, then post-Stance-shift Prime→Shift and Shift→Pivot based on durability projections plus Amplifier development and deployment)."
-    },
-    {
-      id: "c6",
-      lane: "crew",
-      title: "Plain language + own/dyad/small team pulses",
-      wavShort: "Self-selectable crew",
+      id: "u2", lane: "uip",
+      title: "Open rulings, KB_UIP v0.7, destination-brief content",
+      wavShort: "Charlie's own queue — untracked as dev tickets",
       priority: "med",
-      start: "2026-07-01",
-      end:   "2026-09-30",
-      detail: "Own and dyad/small team views and pulses — the individual sets their cross-functional crew distinct from the formal team config. Cross-cutting collaborators often matter more than the formal team for day-to-day work, so this surfaces what's actually happening in the group people work with. Plus plain-language surfacing of stance / orienting / framing and Use-Improve-Protect in Crew View."
+      start: "2026-08-11", end: "2027-01-31",
+      detail: "Charlie's own workflow — the four open rulings, two Part 8 defects, and KB_UIP version bump, plus incremental landing of destination-brief content. Not tracked as Linear tickets per standing practice; shown here only so the roadmap doesn't imply UIP is 100% dev-driven."
     },
 
-    // --- LAUNCH VIEW ------------------------------------------------------
+    // --- YOU / BASE VIEW -----------------------------------------------------
     {
-      id: "l1",
-      lane: "launch",
-      title: "Amplifier module + UIP landing",
-      wavShort: "WAV-365 · 603",
-      priority: "high",
-      start: "2026-05-25",
-      end:   "2026-06-30",
-      detail: "Launch View EA basics. Amplifier module illustration (WAV-365, 603) with scores wired into the actual assessment for individuals (pitching gauges). Provide base info on each amplifier from knowledge-base documents — at least enough that clicking shows what each is. Use-Improve-Protect landing so people see additional resources beyond the assessment output. Aim is a landing page for the links in UIP — not the full module, just enough to demonstrate that we're not just telling people what to do, we're giving them the resources."
+      id: "y1", lane: "you",
+      title: "Wire You/Base to real A360 output — the P1 unlock",
+      wavShort: "WAV-819 (B-5) + 663·667·665·664·814",
+      priority: "crit",
+      start: "2026-10-17", end: "2026-11-07",
+      detail: "GA-minimum. B-5 (WAV-819) is the brief's own 'single biggest unlock,' sharing a scoring seam with Crew View's S-1/S-7. B-1/B-3/B-6/B-7/B-8 are already covered by existing tickets. ~37 hrs."
     },
     {
-      id: "l2",
-      lane: "launch",
-      title: "Five amplifier epicenters + training",
-      wavShort: "WAV-603 · A360 Pro · 3 levels deep",
+      id: "y2", lane: "you",
+      title: "Remaining seams — B-2, B-4, B-9, Daily Roger Loop",
+      wavShort: "WAV-817 · 818 · 820",
       priority: "high",
-      start: "2026-07-01",
-      end:   "2026-09-30",
-      detail: "The five Amplifier Epicenters and training ship with A360 Pro up to three levels deep (WAV-603). Epicenter level (Framer, Tactician, Beacon, etc.) plus the module level beneath (TAC-1, BEA-4, etc.). Each amplifier ties into Use-Improve-Protect via specific connections: an associated Energetic Stance for Use (get your orientation right), the amplifier itself for Improve (skill development), and the Response Field for Protect (intentional evaluation and deployment). Scoring is already coded to support these links."
-    },
-    {
-      id: "l3",
-      lane: "launch",
-      title: "UIP wiring + relativized scores",
-      wavShort: "WAV-273 · every gauge linked",
-      priority: "high",
-      start: "2026-10-01",
-      end:   "2026-12-31",
-      detail: "Use-Improve-Protect wired into every gauge — including the to-be-surfaced Stance gauges. Links in every one for supporting modules. Use: Stance Alignment plus Response Field. Improve: Dev plus Response Field. Protect: Range/Drift plus Response Field. Plus WAV-273 Raw, Relative, and Potential scores in the rotating panel for individual and team lenses."
+      start: "2026-11-07", end: "2027-01-31",
+      detail: "Stretch. Today's Edge, the Baseline/Now toggle, band tier-gating, and the two-prompt daily loop (still missing its source 'loop spec' document). ~17 hrs."
     },
 
-    // --- OTHER / FUTURE PLANNING ------------------------------------------
+    // --- MOBILE APP (assumption-based, no tickets exist) ---------------------
     {
-      id: "o1",
-      lane: "other",
-      title: "Quick surveys for outreach + speaking",
-      wavShort: "10-question briefs · v0.3 stance",
-      priority: "med",
-      start: "2026-07-01",
-      end:   "2026-07-15",
-      detail: "Quick surveys for outreach and speaking — 10-question briefs in the same format and iconography as the Drives refiners. Five questions on Stance, five on Phase, predicting all 25 plus Execution Rhythm. Consider current stance v0.3 draft for Stance and Work Shift; potentially augment v0.3 for Social Charge and Execution Rhythm."
+      id: "mb1", lane: "mobile",
+      title: "Prototype gap-assessment + core wiring (ASSUMPTION — no tickets exist)",
+      wavShort: "S&A Marketing prototype · no WAV tickets yet",
+      priority: "crit",
+      start: "2026-10-17", end: "2026-11-07",
+      detail: "GA-minimum, entirely provisional. No Linear tickets exist for this. Assumes ~7 tickets, ~40 hrs, wiring the existing prototype to the same A360 output You/Base's B-5 consumes. Charlie's framing: a value item, run in parallel with You/Base. Needs real scoping before this bar means anything firm."
     },
     {
-      id: "o2",
-      lane: "other",
-      title: "Notifications system",
-      wavShort: "Cadence + survey dropdowns",
+      id: "mb2", lane: "mobile",
+      title: "Adjustments & polish beyond MVP wiring",
+      wavShort: "Assumption — ~16 hrs",
       priority: "med",
-      start: "2026-10-01",
-      end:   "2026-12-31",
-      detail: "Standard cadence-based notifications on the app interface — set at whatever cadence works best. Alongside each notification, a + or prompt for a dropdown surfacing: Work Shift weekly survey questions (compares current work-slider input to baseline from the assessment, ideally averaged over five takes plus Roger calibrations), unfinished refiner questions (if the user just did QQs between tiers), and Amplifier questions at the epicenter level (Tactician, Beacon, etc. — not TAC-1, BEA-4, those live in Launch View)."
+      start: "2026-11-07", end: "2027-01-31",
+      detail: "Stretch, provisional. Whatever the prototype needs beyond core wiring once real scoping happens."
+    },
+
+    // --- STANCE ALIGNMENT ------------------------------------------------
+    {
+      id: "s1", lane: "stance",
+      title: "SA-9 unlock + SA-1, SA-2, SA-2b quick fixes",
+      wavShort: "WAV-824 · 823 · 825 · 826",
+      priority: "crit",
+      start: "2026-11-07", end: "2026-11-16",
+      detail: "GA-minimum. SA-9 (WAV-824) exposes the ordered 25-signature ranking — no blockers, unlocks SA-1/SA-5/SA-10. SA-2/SA-2b are minutes-scale string fixes. ~32 hrs."
     },
     {
-      id: "o3",
-      lane: "other",
-      title: "UWorks · AWorks · P360 basics",
-      wavShort: "Initial tier builds",
+      id: "s2", lane: "stance",
+      title: "Remaining Stance seams — SA-4, 5, 6, 8, 10, 11, 12; SA-7 legal tracking",
+      wavShort: "WAV-827 · 830 · 831 · 834 · 835 · 836 · 832",
+      priority: "high",
+      start: "2026-11-16", end: "2027-01-31",
+      detail: "Stretch. Includes SA-4 (unresolved — its relationship to WAV-364 needs Trenton's confirmation before this is even fully scoped), gate/zone gating of recommendations, feedback-control wiring, and the SA-7 fair-use legal review tracking item (not dev work). ~29 hrs."
+    },
+
+    // --- LAUNCH VIEW -----------------------------------------------------
+    {
+      id: "l1", lane: "launch",
+      title: "Scope Launch View into dev-sized tickets (UNSCOPED)",
+      wavShort: "WAV-795 · still childless",
       priority: "med",
-      start: "2026-10-01",
-      end:   "2026-12-31",
-      detail: "Initial tier builds for UWorks (Unicorn-themed), AWorks (Amplifier-themed), and P360 (Performance 360). Paired with Use-Improve-Protect wiring across every gauge."
+      start: "2026-11-17", end: "2027-01-31",
+      detail: "Not a real estimate — placeholder only. Launch View has no dev-committed sub-tickets today; WAV-634 (the Charlie-side master) hasn't been handed off the way Crew View's and You/Base's masters were. Real Amplifier/AmpArc content and the wavelength-launch-unified JSX exist, but nothing has been broken into execution-sized pieces yet. Assume this begins once Stance Alignment's GA-minimum lands and runs open-ended."
+    },
+
+    // --- PLATFORM / ADMIN (cross-cutting) ---------------------------------
+    {
+      id: "p1", lane: "platform",
+      title: "Launch-blocking: tier entitlement security + Roger trust grounding",
+      wavShort: "WAV-168 · 169 · 652 · 655",
+      priority: "crit",
+      start: "2026-08-11", end: "2026-11-07",
+      detail: "GA-minimum, running continuously in the background across the whole GA window rather than as its own phase. Tier entitlement enforcement (WAV-168/169) and Roger's two most trust-critical behavioral grounding items: never confabulate against real A360 data (WAV-652), and anti-sycophancy / honesty-first (WAV-655). ~32 hrs, spread as background tax on every other lane's schedule."
     },
     {
-      id: "o4",
-      lane: "other",
-      title: "Future planning — tiers scoped (Core · Unicorn · Amp · P360)",
-      wavShort: "⊞ all tiers scoped by 9/30",
+      id: "p2", lane: "platform",
+      title: "Remaining Platform/Admin — Roger identity depth, analytics, infra chores, test-failure cleanup",
+      wavShort: "37 tickets — WAV-650·651·656·658·577·578·263·792·782-790 and others",
       priority: "med",
-      start: "2026-08-01",
-      end:   "2026-09-30",
-      detail: "Scoping work for the next layer. A360 Core ⊞ all tiers scoped. Unicorn ⊞ all tiers scoped. Amp ⊞ all tiers scoped. P360 ⊞ all tiers scoped. Plus the Mission, Culture, Resonance, and Signal series at the same scoping level. 'Scoped' here means specs and structure are defined and ready for the planning push that follows in Q4."
+      start: "2026-08-11", end: "2027-01-31",
+      detail: "Stretch. Includes the deeper Roger identity/character-stability grounding, behavioral analytics infrastructure, the frontend/backend/roger monorepo CI/CD migration (deliberately deferred — too disruptive to run during the crunch), the Claude Code harness commit, and the 60-pre-existing-test-failure cleanup (WAV-782's children). ~235 hrs, deprioritized relative to the GA-minimum cut."
     },
+
+    // --- ENTERPRISE ACCOUNT/TEAM (concurrent, not part of GA path) --------
     {
-      id: "o5",
-      lane: "other",
-      title: "Future planning — all tiers planned + Axis/Vector ↗",
-      wavShort: "↓↑ planned · ↗ planned",
-      priority: "med",
-      start: "2026-10-01",
-      end:   "2026-12-31",
-      detail: "The Q4 planning push that sets up 2027. A360 Core, Unicorn, Amp, and P360 each get ↓↑ all-tiers planned. Plus A360 Axis ↗, UWorks Vector ↗, AWorks Amp ↗, P360 ↗ all planned. Mission, Culture, Resonance, Signal series at ↓↑ level. Impact, Apex, Cadence, Radar series at ↗ level. 'Planned' is deeper than 'scoped' — it includes sequencing, dependencies, and the rough resourcing required for the 2027 build window."
+      id: "e1", lane: "enterprise",
+      title: "Enterprise Account/Team Management — active, expected complete end of August",
+      wavShort: "WAV-805 · 806 · 807 · 808 (all Rick)",
+      priority: "high",
+      start: "2026-08-11", end: "2026-08-31",
+      detail: "Real, active work — Make Team a first-class citizen of the platform, org units, roles/permissions, an enterprise management skeleton. Not derived from any operationalization brief and not required for A360 GA itself. Draws from Rick's hours in parallel with early Crew View / UIP work, expected complete by end of August. ~32 hrs is likely a floor, not a full estimate, since these read as epic-level titles not yet broken into execution-sized pieces the way Crew View's and You/Base's were."
     }
   ],
 
-  // --- Milestones (diamonds at the bottom) ---------------------------------
-  // Each milestone is positioned at the end of its `date`.
-  // Click opens a detail modal just like an item.
+  // --- Milestones ------------------------------------------------------
   milestones: [
     {
-      id: "m1",
-      label: "EA go-live",
-      shortDate: "6/30",
-      date: "2026-06-30",
-      title: "EA go-live · 6/30",
-      priority: "crit",
-      dates: "June 30, 2026",
+      id: "m1", label: "EA go-live", shortDate: "6/30", date: "2026-06-30",
+      title: "EA go-live · 6/30", priority: "crit", dates: "June 30, 2026",
       wav: "Early Access launch",
-      detail: "Early Access go-live. What needs to be ready: A360 cleanup including Roger output-wiring (the load-bearing dependency for every view), Z5/D5/E5+E5x refiners, You View app foundation, Team Member Crew View in app, Crew Desktop EA Team Lead foundation, Team Groupings + Crew Read placeholder, Launch View Amplifier module + UIP landing, and the previously scoped refiners (WAV-355/356/357). Most everything between 5/25 and 6/30 in the timeline ladders into this gate."
+      detail: "Historical — Early Access went live on schedule, per Rick's WAV-633 ship note confirming v1.50.0-mvp on 2026-07-15 (post-EA stabilization)."
     },
     {
-      id: "m2",
-      label: "GA go-live",
-      shortDate: "9/30",
-      date: "2026-09-30",
-      title: "GA go-live · 9/30",
-      priority: "crit",
-      dates: "September 30, 2026",
-      wav: "General Access launch",
-      detail: "General Access go-live. What needs to be ready: Q5 / V5 / H5 refiners (Q5 is the gate to App full functionality), assessment retake versioning, editable categories + structural refinement, CrewArcs (5), Crew Desktop GA including the CHRO and Job Applicant view, Plain Language + small team pulses, Five Amplifier Epicenters + training at A360 Pro three levels, Quick Surveys (ships ahead by 7/15), and tier scoping for Core / Unicorn / Amp / P360. The 9/30 gate is denser than 6/30 — more parallel workstreams, more dependencies between them."
+      id: "m2", label: "GA go-live (minimum)", shortDate: "11/7", date: "2026-11-07",
+      title: "GA go-live · GA-minimum scope · 11/7", priority: "crit", dates: "November 7, 2026",
+      wav: "General Availability launch — reduced scope",
+      detail: "This is a GA-MINIMUM milestone, not full completion: it reflects only the crit-priority bars on this roadmap (Crew View's P1 wiring, UIP's mechanical wiring, You/Base's B-5, Mobile App's core wiring — assumption-based, and Platform/Admin's launch-blocking security/trust items). Stance Alignment and Launch View are explicitly sequenced after this date. Every stretch-priority bar continues past 11/7 by design — a deliberately reduced slice now, with full scope shown as a separate visible layer rather than implied as done."
     },
     {
-      id: "m3",
-      label: "Polish + plan",
-      shortDate: "12/31",
-      date: "2026-12-31",
-      title: "Polish + plan · 12/31",
-      priority: "crit",
-      dates: "December 31, 2026",
-      wav: "Polish complete · 2027 setup",
-      detail: "Polish complete plus Future Planning foundation. What needs to be ready: Response Field (Notice-Name-Attune-Route-Calibrate complete with E5x and gating), My Wavelength Clear Signal, You View desktop with enhanced insights, UIP wiring across every gauge plus relativized scores, notifications system, UWorks / AWorks / P360 basics, and all tiers planned (↓↑) plus the Axis / Vector / Amp ↗ planning. The 12/31 push is less about new features and more about closing UIP loops, surfacing the right gauges in the right places, and lining up clean inputs for the 2027 build window."
+      id: "m3", label: "Polish + Launch View", shortDate: "1/31", date: "2027-01-31",
+      title: "Polish + Launch View + Future Planning · 1/31 (open-ended)", priority: "crit", dates: "January 31, 2027 (provisional)",
+      wav: "Stretch work + Launch View scoping",
+      detail: "Open-ended placeholder, not a hard deadline. Covers all stretch-priority work across every lane, plus Launch View's entire buildout, which cannot be dated with any confidence until it gets broken into dev-sized tickets the way Crew View and You/Base already have been. Treat this date as 'not before,' not 'by.'"
     }
   ]
 };

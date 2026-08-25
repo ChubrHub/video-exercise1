@@ -75,11 +75,11 @@ window.ROADMAP_DATA = {
     // --- A360 ASSESSMENT ----------------------------------------------------
     {
       id: "a1", lane: "a360",
-      title: "Z5s Social Energy refiner — do next (Charlie-reprioritized 8/11)",
+      title: "Z5s Social Energy refiner",
       wavShort: "WAV-837",
       priority: "crit",
-      start: "2026-08-11", end: "2026-08-21",
-      detail: "GA-minimum, immediate. Carved out of WAV-355 on 8/11 and reprioritized High relative to all other refiners, per Charlie. First Assessment item on the schedule. ~8 hrs at the priority-heuristic rate."
+      start: "2026-09-14", end: "2026-09-24",
+      detail: "GA-minimum. Carved out of WAV-355 on 8/11 and reprioritized High relative to all other refiners, per Charlie. Scheduled to begin mid-September rather than immediately. ~8 hrs at the priority-heuristic rate."
     },
     {
       id: "a1b", lane: "a360",
@@ -140,15 +140,15 @@ window.ROADMAP_DATA = {
       title: "Wire You/Base to real A360 output — the P1 unlock",
       wavShort: "WAV-819 (B-5) + 663·667·665·664·814",
       priority: "crit",
-      start: "2026-10-17", end: "2026-11-07",
-      detail: "GA-minimum. B-5 (WAV-819) is the brief's own 'single biggest unlock,' sharing a scoring seam with Crew View's S-1/S-7. B-1/B-3/B-6/B-7/B-8 are already covered by existing tickets. ~37 hrs."
+      start: "2026-08-27", end: "2026-09-17",
+      detail: "GA-minimum. B-5 (WAV-819) is the brief's own 'single biggest unlock,' sharing a scoring seam with Crew View's S-1/S-7. B-1/B-3/B-6/B-7/B-8 are already covered by existing tickets. ~37 hrs. Moved earlier to run concurrently with Crew View/UIP rather than after — see note on combined capacity below."
     },
     {
       id: "y2", lane: "you",
       title: "Remaining seams — B-2, B-4, B-9, Daily Roger Loop",
       wavShort: "WAV-817 · 818 · 820",
       priority: "high",
-      start: "2026-11-07", end: "2027-01-31",
+      start: "2026-09-17", end: "2027-01-31",
       detail: "Stretch. Today's Edge, the Baseline/Now toggle, band tier-gating, and the two-prompt daily loop (still missing its source 'loop spec' document). ~17 hrs."
     },
 
@@ -158,15 +158,15 @@ window.ROADMAP_DATA = {
       title: "Prototype gap-assessment + core wiring (ASSUMPTION — no tickets exist)",
       wavShort: "S&A Marketing prototype · no WAV tickets yet",
       priority: "crit",
-      start: "2026-10-17", end: "2026-11-07",
-      detail: "GA-minimum, entirely provisional. No Linear tickets exist for this. Assumes ~7 tickets, ~40 hrs, wiring the existing prototype to the same A360 output You/Base's B-5 consumes. Charlie's framing: a value item, run in parallel with You/Base. Needs real scoping before this bar means anything firm."
+      start: "2026-10-01", end: "2026-10-22",
+      detail: "GA-minimum, entirely provisional. No Linear tickets exist for this. Assumes ~7 tickets, ~40 hrs, wiring the existing prototype to the same A360 output You/Base's B-5 consumes. Charlie's framing: a value item, originally paired with You/Base — the two are no longer running in parallel on this schedule, since You/Base now starts 8/27 and Mobile starts 10/1. Needs real scoping before this bar means anything firm."
     },
     {
       id: "mb2", lane: "mobile",
       title: "Adjustments & polish beyond MVP wiring",
       wavShort: "Assumption — ~16 hrs",
       priority: "med",
-      start: "2026-11-07", end: "2027-01-31",
+      start: "2026-10-22", end: "2027-01-31",
       detail: "Stretch, provisional. Whatever the prototype needs beyond core wiring once real scoping happens."
     },
 

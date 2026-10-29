@@ -1,5 +1,14 @@
 # CLAUDE.md
 
+## Every ruling of his goes through the picker
+
+**CH, 2026-10-29:** *"if I need to rule on anything it need to be through picker. Please. Outstanding
+items get buried and it's a killer."* Anything that needs his word (a ruling, an approval, a choice, a
+go, wording to sign off) is asked with `AskUserQuestion`, as the last thing in the turn. Never ask it in
+prose, never leave it for the next turn, and never end on a "what's left" list. Put the recommended
+option first. He cannot see picker previews, so wording he must approve goes in the question text or a
+Word file named in it. The same rule is in `~/.claude/CLAUDE.md`, which every session loads.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Scope and ownership — read this first
